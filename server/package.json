@@ -1,0 +1,11 @@
+{
+  "name": "board-game-buddy-server",
+  "version": "1.0.0",
+  "description": "Server for Board Game Buddy",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ruel Neuman",
+  "license": "MIT"
+}
