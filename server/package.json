@@ -13,6 +13,7 @@
   "author": "Ruel Neuman",
   "license": "MIT",
   "devDependencies": {
+    "@types/morgan": "^1.9.3",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
     "cross-env": "^7.0.3",
@@ -27,6 +28,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "morgan": "^1.10.0"
   }
 }
