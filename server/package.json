@@ -4,8 +4,8 @@
   "description": "Server for Board Game Buddy",
   "main": "./src/server.ts",
   "scripts": {
-    "start": "node ./build/src/server.js",
-    "dev": "ts-node-dev ./src/server.ts",
+    "start": "cross-env NODE_ENV=production node ./build/src/server.js",
+    "dev": "cross-env NODE_ENV=development ts-node-dev ./src/server.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts"
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
