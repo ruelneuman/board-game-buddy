@@ -1,7 +1,23 @@
 import express from 'express';
 import 'express-async-errors';
+import mongoose from 'mongoose';
 import morgan from 'morgan';
+import { MONGODB_URI } from './config';
 import router from './routes';
+import logger from './utils/logger';
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    logger.info('connected to MongoDb');
+  })
+  .catch((error) => {
+    let message = '';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    logger.error(`error connecting to MongoDB: ${message}`);
+  });
 
 const app = express();
 
