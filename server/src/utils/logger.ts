@@ -3,12 +3,12 @@
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
 const logger = {
-  info: (...params: [unknown]) => {
+  info: (...params: unknown[]) => {
     if (!isTestEnvironment) {
       console.log(...params);
     }
   },
-  error: (...params: [unknown]) => {
+  error: (...params: unknown[]) => {
     if (!isTestEnvironment) {
       console.error(...params);
     }
