@@ -1,20 +1,30 @@
 import { Router } from 'express';
+import controller from '../controllers/users';
 
 const router = Router();
 
-router.get('/');
-router.post('/');
+router.get('/', controller.getUsers);
+router.post('/', controller.createUser);
 
-router.get('/:userId');
+router.get('/:userId', controller.getUser);
 
-router.get('/:userId/collections');
+router.get('/:userId/collections', controller.getUserCollections);
 
-router.get('/:userId/collections/:collectionType');
+router.get(
+  '/:userId/collections/:collectionType',
+  controller.getUserCollection
+);
 
-router.get('/current');
-router.delete('/current');
+router.get('/current', controller.getCurrentUser);
+router.delete('/current', controller.deleteCurrentUser);
 
-router.get('/current/collections/:collectionType');
-router.put('/current/collections/:collectionType');
+router.get(
+  '/current/collections/:collectionType',
+  controller.getCurrentUserCollection
+);
+router.put(
+  '/current/collections/:collectionType',
+  controller.updateCurrentUserCollection
+);
 
 export default router;
