@@ -1,7 +1,7 @@
 import express from 'express';
-import games from './games';
-import reviews from './reviews';
-import users from './users';
+import games from './games.router';
+import reviews from './reviews.router';
+import users from './users.router';
 
 const router = express.Router();
 
