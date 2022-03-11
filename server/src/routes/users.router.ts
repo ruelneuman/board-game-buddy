@@ -10,21 +10,18 @@ router.get('/:userId', controller.getUser);
 
 router.get('/:userId/collections', controller.getUserCollections);
 
-router.get(
-  '/:userId/collections/:collectionType',
-  controller.getUserCollection
-);
+router.get('/:userId/collections/:gameListType', controller.getUserCollection);
 
 router.get('/current', controller.getCurrentUser);
 router.delete('/current', controller.deleteCurrentUser);
 
 router.get(
-  '/current/collections/:collectionType',
-  controller.getCurrentUserCollection
+  '/current/collections/:gameListType',
+  controller.getCurrentUserGameList
 );
 router.put(
-  '/current/collections/:collectionType',
-  controller.updateCurrentUserCollection
+  '/current/collections/:gameListType',
+  controller.updateCurrentUserGameList
 );
 
 export default router;
