@@ -24,6 +24,10 @@ const getCurrentUser = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
+const updateCurrentUser = (_req: Request, res: Response) => {
+  res.status(501).json({ error: 'Not implemented' });
+};
+
 const deleteCurrentUser = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
@@ -43,6 +47,7 @@ export default {
   getUserCollections,
   getUserCollection,
   getCurrentUser,
+  updateCurrentUser,
   deleteCurrentUser,
   getCurrentUserGameList,
   updateCurrentUserGameList,
