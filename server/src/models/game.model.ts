@@ -10,13 +10,7 @@ const gameSchema = new mongoose.Schema(
     boardGameAtlasId: {
       type: String,
       required: true,
-      validate: {
-        validator: (boardGameAtlasId: string) => {
-          const re = /^([a-zA-Z0-9]){10}$/;
-          return re.test(boardGameAtlasId);
-        },
-        message: 'invalid boardGameAtlasId',
-      },
+      match: [/^([a-zA-Z0-9]){10}$/, 'invalid boardGameAtlasId'],
     },
     reviews: {
       type: [

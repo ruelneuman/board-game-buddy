@@ -35,6 +35,7 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       default: '',
       trim: true,
+      maxlength: 3000,
     },
     likes: {
       type: [
