@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 interface UserDocument extends mongoose.Document {
   username: string;
@@ -66,5 +67,33 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre(
+  'save',
+  async function hashPassword(
+    this: UserDocument,
+    next: mongoose.CallbackWithoutResultAndOptionalError
+  ) {
+    if (!this.isModified('password')) return next();
+
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(this.password, saltRounds);
+
+    this.password = hash;
+
+    return next();
+  }
+);
+
+userSchema.methods.comparePassword = async function comparePassword(
+  candidatePassword: string
+): Promise<boolean> {
+  try {
+    const user = this as UserDocument;
+    return await bcrypt.compare(candidatePassword, user.password);
+  } catch (err) {
+    return false;
+  }
+};
 
 export default mongoose.model<UserDocument>('User', userSchema);
