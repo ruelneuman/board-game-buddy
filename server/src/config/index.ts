@@ -1,9 +1,15 @@
 import 'dotenv/config';
 
-export const {
-  PORT = 3001,
-  SECRET,
-  MONGODB_URI = '',
-  JWT_ISSUER = '',
-  JWT_AUDIENCE = '',
-} = process.env;
+const getEnv = (key: string): string => {
+  const value = process.env[key];
+  if (value === undefined) {
+    throw new Error(`missing required environment variable ${key}`);
+  }
+  return value;
+};
+
+export const PORT = getEnv('PORT');
+export const MONGODB_URI = getEnv('MONGODB_URI');
+export const SECRET = getEnv('SECRET');
+export const JWT_ISSUER = getEnv('JWT_ISSUER');
+export const JWT_AUDIENCE = getEnv('JWT_AUDIENCE');
