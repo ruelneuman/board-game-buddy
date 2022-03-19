@@ -1,12 +1,40 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import { GameListCategory } from '../types';
+
+const gameListDefault = () =>
+  Object.values(GameListCategory).map((category) => ({
+    listName: category,
+    games: [],
+  }));
+
+interface GameListDocument extends mongoose.Document {
+  listName: GameListCategory;
+  games: mongoose.Schema.Types.ObjectId[];
+}
+
+const gameListSchema = new mongoose.Schema({
+  listName: {
+    type: String,
+    required: true,
+    enum: Object.values(GameListCategory),
+  },
+  games: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Game',
+      },
+    ],
+  },
+});
 
 interface UserDocument extends mongoose.Document {
   username: string;
   email: string;
   password: string;
   bio: string;
-  gameLists: mongoose.Schema.Types.ObjectId[];
+  gameLists: GameListDocument;
   reviews: mongoose.Schema.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
@@ -40,7 +68,8 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      match: [/^\$2[ayb]\$.{56}$/, 'invalid password hash'],
+      minlength: 8,
+      maxLength: 40,
     },
     bio: {
       type: String,
@@ -49,12 +78,8 @@ const userSchema = new mongoose.Schema(
       maxlength: 500,
     },
     gameLists: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'GameList',
-        },
-      ],
+      type: [gameListSchema],
+      default: gameListDefault(),
     },
     reviews: {
       type: [
