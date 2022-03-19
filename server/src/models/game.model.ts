@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 interface GameDocument extends mongoose.Document {
   boardGameAtlasId: string;
   reviews: mongoose.Schema.Types.ObjectId[];
+  createdAt: mongoose.Schema.Types.Date;
+  updatedAt: mongoose.Schema.Types.Date;
 }
 
 const gameSchema = new mongoose.Schema(

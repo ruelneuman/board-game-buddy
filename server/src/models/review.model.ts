@@ -7,6 +7,8 @@ interface ReviewDocument extends mongoose.Document {
   rating: GameRating;
   reviewText: string;
   likes: mongoose.Schema.Types.ObjectId[];
+  createdAt: mongoose.Schema.Types.Date;
+  updatedAt: mongoose.Schema.Types.Date;
 }
 
 const reviewSchema = new mongoose.Schema(

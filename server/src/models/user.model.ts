@@ -8,6 +8,8 @@ interface UserDocument extends mongoose.Document {
   bio: string;
   gameLists: mongoose.Schema.Types.ObjectId[];
   reviews: mongoose.Schema.Types.ObjectId[];
+  createdAt: mongoose.Schema.Types.Date;
+  updatedAt: mongoose.Schema.Types.Date;
 }
 
 const userSchema = new mongoose.Schema(

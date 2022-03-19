@@ -5,6 +5,8 @@ interface GameListDocument extends mongoose.Document {
   listName: GameListCategory;
   userId: mongoose.Schema.Types.ObjectId;
   games: mongoose.Schema.Types.ObjectId[];
+  createdAt: mongoose.Schema.Types.Date;
+  updatedAt: mongoose.Schema.Types.Date;
 }
 
 const gameListSchema = new mongoose.Schema(
