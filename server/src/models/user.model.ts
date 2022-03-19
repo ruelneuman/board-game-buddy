@@ -13,22 +13,6 @@ interface GameListDocument extends mongoose.Document {
   games: mongoose.Schema.Types.ObjectId[];
 }
 
-const gameListSchema = new mongoose.Schema({
-  listName: {
-    type: String,
-    required: true,
-    enum: Object.values(GameListCategory),
-  },
-  games: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Game',
-      },
-    ],
-  },
-});
-
 interface UserDocument extends mongoose.Document {
   username: string;
   email: string;
@@ -78,7 +62,23 @@ const userSchema = new mongoose.Schema(
       maxlength: 500,
     },
     gameLists: {
-      type: [gameListSchema],
+      type: [
+        {
+          listName: {
+            type: String,
+            required: true,
+            enum: Object.values(GameListCategory),
+          },
+          games: {
+            type: [
+              {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Game',
+              },
+            ],
+          },
+        },
+      ],
       default: gameListDefault(),
     },
     reviews: {
