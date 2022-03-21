@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import { MONGODB_URI } from './config';
 import router from './routes';
+import { errorHandler } from './middleware';
 import logger from './utils/logger';
 
 mongoose
@@ -27,5 +28,7 @@ const morganFormat = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
 app.use(morgan(morganFormat));
 
 app.use(router);
+
+app.use(errorHandler);
 
 export default app;

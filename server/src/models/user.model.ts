@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import { z } from 'zod';
 import { GameListCategory } from '../types';
 
 const gameListDefault = () =>
@@ -13,15 +14,19 @@ interface GameListDocument extends mongoose.Document {
   games: mongoose.Schema.Types.ObjectId[];
 }
 
-interface UserDocument extends mongoose.Document {
+export interface UserInput {
   username: string;
   email: string;
   password: string;
   bio: string;
+}
+
+export interface UserDocument extends UserInput, mongoose.Document {
   gameLists: GameListDocument;
   reviews: mongoose.Schema.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema(
@@ -30,7 +35,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true,
       minlength: 3,
       maxlength: 20,
       match: [
@@ -42,12 +46,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true,
-      match: [
-        // eslint-disable-next-line no-useless-escape
-        /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-        'invalid email address',
-      ],
+      validate: {
+        validator: (email: string) => {
+          const schema = z.string().email();
+          return schema.safeParse(email).success;
+        },
+        message: 'invalid email address',
+      },
     },
     password: {
       type: String,
