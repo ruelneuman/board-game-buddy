@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 const getEnv = (key: string): string => {
   const value = process.env[key];
-  if (value === undefined) {
+  if (value === undefined || value.length === 0) {
     throw new Error(`missing required environment variable ${key}`);
   }
   return value;
