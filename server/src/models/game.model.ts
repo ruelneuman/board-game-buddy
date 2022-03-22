@@ -12,7 +12,7 @@ const gameSchema = new mongoose.Schema(
     boardGameAtlasId: {
       type: String,
       required: true,
-      match: [/^([a-zA-Z0-9]){10}$/, 'invalid boardGameAtlasId'],
+      match: [/^([a-zA-Z0-9]){10}$/, 'Invalid boardGameAtlasId'],
     },
     reviews: {
       type: [

@@ -30,7 +30,7 @@ const reviewSchema = new mongoose.Schema(
       max: 5,
       validate: {
         validator: (rating: GameRating) => Number.isInteger(rating),
-        message: 'rating must be an integer',
+        message: 'Rating must be an integer',
       },
     },
     reviewText: {

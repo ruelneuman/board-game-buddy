@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
       maxlength: 20,
       match: [
         /^[a-zA-Z0-9]+$/,
-        'username must contain only alphanumeric characters',
+        'Username must contain only alphanumeric characters',
       ],
     },
     email: {
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
           const schema = z.string().email();
           return schema.safeParse(email).success;
         },
-        message: 'invalid email address',
+        message: 'Invalid email address',
       },
     },
     password: {
