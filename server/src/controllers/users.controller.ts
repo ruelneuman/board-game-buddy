@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import User from '../models/user.model';
 import { newUserSchema } from '../validationSchemas';
+import { createUser } from '../services/users.service';
 
 const getUsers = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
@@ -10,10 +10,10 @@ const getUser = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
-const createUser = async (req: Request, res: Response) => {
+const addNewUser = async (req: Request, res: Response) => {
   const newUser = await newUserSchema.parseAsync(req.body);
 
-  const user = await User.create(newUser);
+  const user = await createUser(newUser);
 
   return res.status(200).json(user);
 };
@@ -49,7 +49,7 @@ const updateCurrentUserGameList = (_req: Request, res: Response) => {
 export default {
   getUsers,
   getUser,
-  createUser,
+  addNewUser,
   getUserCollections,
   getUserCollection,
   getCurrentUser,

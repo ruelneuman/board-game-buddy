@@ -5,7 +5,7 @@ import controller from '../controllers/users.controller';
 const router = Router();
 
 router.get('/', controller.getUsers);
-router.post('/', controller.createUser);
+router.post('/', controller.addNewUser);
 
 router.get('/:userId', controller.getUser);
 
