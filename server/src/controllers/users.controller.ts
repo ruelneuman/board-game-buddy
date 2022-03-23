@@ -11,19 +11,7 @@ const getUser = (_req: Request, res: Response) => {
 };
 
 const createUser = async (req: Request, res: Response) => {
-  const newUser = newUserSchema.parse(req.body);
-
-  const userByEmail = await User.findOne({ email: newUser.email });
-
-  if (userByEmail) {
-    return res.status(400).json('email is already taken');
-  }
-
-  const userByUsername = await User.findOne({ username: newUser.username });
-
-  if (userByUsername) {
-    return res.status(400).json('username is already taken');
-  }
+  const newUser = await newUserSchema.parseAsync(req.body);
 
   const user = await User.create(newUser);
 
