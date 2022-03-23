@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 import createHttpError from 'http-errors';
+import mongoose from 'mongoose';
 import { ZodError } from 'zod';
 import logger from '../utils/logger';
 
@@ -50,8 +51,14 @@ export const errorResponder: ErrorRequestHandler = (err, _req, res, next) => {
 
     errorResponse.details = details;
 
-    return res.status(400).json(errorResponse);
+    return res.status(errorResponse.status).json(errorResponse);
   }
 
-  return res.status(500).json(errorResponse);
+  if (err instanceof mongoose.Error.ValidationError) {
+    errorResponse.status = 400;
+    errorResponse.message = 'Validation failed';
+    return res.status(errorResponse.status).json(errorResponse);
+  }
+
+  return res.status(errorResponse.status).json(errorResponse);
 };
