@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { GameListCategory } from '../types';
@@ -128,4 +129,18 @@ userSchema.methods.comparePassword = async function comparePassword(
   }
 };
 
-export default mongoose.model<UserDocument>('User', userSchema);
+// set default pagination options
+mongoosePaginate.paginate.options = {
+  limit: 30,
+  customLabels: {
+    totalDocs: 'userCount',
+    docs: 'users',
+  },
+};
+
+userSchema.plugin(mongoosePaginate);
+
+export default mongoose.model<
+  UserDocument,
+  mongoose.PaginateModel<UserDocument>
+>('User', userSchema);

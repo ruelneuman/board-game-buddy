@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
-import { newUserSchema } from '../validationSchemas';
-import { createUser } from '../services/users.service';
+import { newUserSchema, getUsersQuery } from '../validationSchemas';
+import { createUser, findPaginatedUsers } from '../services/users.service';
 
-const getUsers = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const getUsers = async (req: Request, res: Response) => {
+  const { limit, offset } = getUsersQuery.parse(req.query);
+
+  const users = await findPaginatedUsers({ limit, offset });
+
+  res.status(200).json(users);
 };
 
 const getUser = (_req: Request, res: Response) => {

@@ -1,7 +1,34 @@
 import { z } from 'zod';
 import User from '../models/user.model';
 
-// eslint-disable-next-line import/prefer-default-export
+export const getUsersQuery = z.object({
+  limit: z
+    .preprocess(
+      (limit) => parseInt(limit as string, 10),
+      z
+        .number({
+          required_error: 'Limit is required',
+          invalid_type_error: 'Limit must be a number',
+        })
+        .int('Limit must be an integer')
+        .min(0, 'Minimum limit is 0')
+        .max(100, 'Maximum limit is 100')
+    )
+    .default(30),
+  offset: z
+    .preprocess(
+      (offset) => parseInt(offset as string, 10),
+      z
+        .number({
+          required_error: 'Offset is required',
+          invalid_type_error: 'Offset must be a number',
+        })
+        .int('Offset must be an integer')
+        .min(0, 'Minimum offset is 0')
+    )
+    .default(0),
+});
+
 export const newUserSchema = z.object({
   username: z
     .string({
