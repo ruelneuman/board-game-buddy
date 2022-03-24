@@ -15,7 +15,18 @@ export const findPaginatedUsers = async ({
   limit: number;
   offset: number;
 }) => {
-  const users = await User.paginate({}, { limit, offset });
+  const options = {
+    limit,
+    offset,
+    sort: {
+      username: 1,
+    },
+    collation: {
+      locale: 'en',
+    },
+  };
+
+  const users = await User.paginate({}, options);
 
   return users;
 };
