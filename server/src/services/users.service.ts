@@ -11,16 +11,16 @@ export const createUser = async (newUser: UserInput) => {
 export const findPaginatedUsers = async ({
   limit,
   offset,
+  sort,
 }: {
   limit: number;
   offset: number;
+  sort: string;
 }) => {
   const options = {
     limit,
     offset,
-    sort: {
-      username: 1,
-    },
+    sort,
     collation: {
       locale: 'en',
     },

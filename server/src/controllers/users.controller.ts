@@ -3,9 +3,9 @@ import { newUserSchema, getUsersQuery } from '../validationSchemas';
 import { createUser, findPaginatedUsers } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
-  const { limit, offset } = getUsersQuery.parse(req.query);
+  const { limit, offset, sort } = getUsersQuery.parse(req.query);
 
-  const users = await findPaginatedUsers({ limit, offset });
+  const users = await findPaginatedUsers({ limit, offset, sort });
 
   res.status(200).json(users);
 };

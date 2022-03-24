@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import User from '../models/user.model';
 
+const usersQueryEnum = z.enum(['username', 'createdAt'] as const);
+
 export const getUsersQuery = z.object({
   limit: z
     .preprocess(
@@ -27,6 +29,7 @@ export const getUsersQuery = z.object({
         .min(0, 'Minimum offset is 0')
     )
     .default(0),
+  sort: usersQueryEnum.default(usersQueryEnum.enum.username),
 });
 
 export const newUserSchema = z.object({
