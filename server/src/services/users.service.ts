@@ -12,15 +12,19 @@ export const findPaginatedUsers = async ({
   limit,
   offset,
   sort,
+  order,
 }: {
   limit: number;
   offset: number;
   sort: string;
+  order: string;
 }) => {
   const options = {
     limit,
     offset,
-    sort,
+    sort: {
+      [sort]: order,
+    },
     collation: {
       locale: 'en',
     },

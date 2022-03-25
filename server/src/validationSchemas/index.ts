@@ -2,6 +2,7 @@ import { z } from 'zod';
 import User from '../models/user.model';
 
 const usersQueryEnum = z.enum(['username', 'createdAt'] as const);
+const sortOrderEnum = z.enum(['asc', 'desc'] as const);
 
 export const getUsersQuery = z.object({
   limit: z
@@ -30,6 +31,7 @@ export const getUsersQuery = z.object({
     )
     .default(0),
   sort: usersQueryEnum.default(usersQueryEnum.enum.username),
+  order: sortOrderEnum.default(sortOrderEnum.enum.desc),
 });
 
 export const newUserSchema = z.object({
