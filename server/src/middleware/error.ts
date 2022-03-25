@@ -11,7 +11,7 @@ interface ErrorResponse {
 }
 
 interface ErrorDetails {
-  field: string;
+  path: string | null;
   messages: string[];
 }
 
@@ -42,12 +42,19 @@ export const errorResponder: ErrorRequestHandler = (err, _req, res, next) => {
     errorResponse.status = 400;
     errorResponse.message = 'Validation failed';
 
-    const { fieldErrors } = err.flatten();
+    const { formErrors, fieldErrors } = err.flatten();
 
     const details: ErrorDetails[] = Object.keys(fieldErrors).map((key) => ({
-      field: key,
+      path: key,
       messages: fieldErrors[key],
     }));
+
+    if (formErrors.length > 0) {
+      details.push({
+        path: null,
+        messages: formErrors,
+      });
+    }
 
     errorResponse.details = details;
 
