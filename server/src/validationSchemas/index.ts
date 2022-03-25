@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import User from '../models/user.model';
 
-const usersQueryEnum = z.enum(['username', 'createdAt'] as const);
-const sortOrderEnum = z.enum(['asc', 'desc'] as const);
+const usersSortEnum = z.enum(['username', 'createdAt'] as const);
+const orderEnum = z.enum(['asc', 'desc'] as const);
 
-export const getUsersQuery = z.object({
+export const usersPaginationQuerySchema = z.object({
   limit: z
     .preprocess(
       (limit) => parseInt(limit as string, 10),
@@ -30,8 +30,8 @@ export const getUsersQuery = z.object({
         .min(0, 'Minimum offset is 0')
     )
     .default(0),
-  sort: usersQueryEnum.default(usersQueryEnum.enum.username),
-  order: sortOrderEnum.default(sortOrderEnum.enum.desc),
+  sort: usersSortEnum.default(usersSortEnum.enum.username),
+  order: orderEnum.default(orderEnum.enum.desc),
 });
 
 export const newUserSchema = z.object({
