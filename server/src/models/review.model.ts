@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { GameRating } from '../types';
 
-interface ReviewDocument extends mongoose.Document {
+export interface ReviewDocument extends mongoose.Document {
   gameId: mongoose.Schema.Types.ObjectId;
   userId: mongoose.Schema.Types.ObjectId;
   rating: GameRating;

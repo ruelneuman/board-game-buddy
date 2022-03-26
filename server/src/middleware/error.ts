@@ -7,10 +7,10 @@ import logger from '../utils/logger';
 interface ErrorResponse {
   message: string;
   status: number;
-  details: ErrorDetails[];
+  details: ValidationErrorDetails[];
 }
 
-interface ErrorDetails {
+interface ValidationErrorDetails {
   path: string | null;
   messages: string[];
 }
@@ -44,10 +44,12 @@ export const errorResponder: ErrorRequestHandler = (err, _req, res, next) => {
 
     const { formErrors, fieldErrors } = err.flatten();
 
-    const details: ErrorDetails[] = Object.keys(fieldErrors).map((key) => ({
-      path: key,
-      messages: fieldErrors[key],
-    }));
+    const details: ValidationErrorDetails[] = Object.keys(fieldErrors).map(
+      (key) => ({
+        path: key,
+        messages: fieldErrors[key],
+      })
+    );
 
     if (formErrors.length > 0) {
       details.push({

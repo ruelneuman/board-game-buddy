@@ -53,6 +53,7 @@ export const newUserSchema = z.object({
       },
       {
         message: 'Username is already taken',
+        path: ['username'],
       }
     ),
   email: z
@@ -68,8 +69,46 @@ export const newUserSchema = z.object({
       },
       {
         message: 'Email is already taken',
+        path: ['email'],
       }
     ),
-  password: z.string().min(8).max(40),
-  bio: z.string().max(5000).default(''),
+  password: z
+    .string({
+      required_error: 'Password is required',
+      invalid_type_error: 'Password must be a string',
+    })
+    .min(8, 'Password must be at least 8 characters')
+    .max(40, 'Password must be 40 or less characters'),
+  bio: z
+    .string({
+      required_error: 'Bio is required',
+      invalid_type_error: 'Bio must be a string',
+    })
+    .max(5000, 'Bio must be 5000 or less characters')
+    .default(''),
 });
+
+export const authenticationSchema = z
+  .object({
+    username: z
+      .string({
+        required_error: 'Username is required',
+        invalid_type_error: 'Username must be a string',
+      })
+      .optional(),
+    email: z
+      .string({
+        required_error: 'Email is required',
+        invalid_type_error: 'Email must be a string',
+      })
+      .email()
+      .optional(),
+    password: z.string({
+      required_error: 'Password is required',
+      invalid_type_error: 'Password must be a string',
+    }),
+  })
+  .refine((object) => object.email || object.username, {
+    message: 'Username or email is required',
+    path: ['username', 'email'],
+  });

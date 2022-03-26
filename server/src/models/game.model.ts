@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-interface GameDocument extends mongoose.Document {
+export interface GameDocument extends mongoose.Document {
   boardGameAtlasId: string;
   reviews: mongoose.Schema.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;

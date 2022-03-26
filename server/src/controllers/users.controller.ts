@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { newUserSchema, getUsersQuery } from '../validationSchemas';
+import {
+  newUserSchema,
+  usersPaginationQuerySchema,
+} from '../validationSchemas';
 import { createUser, findPaginatedUsers } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
-  const options = getUsersQuery.parse(req.query);
+  const options = usersPaginationQuerySchema.parse(req.query);
 
   const users = await findPaginatedUsers(options);
 

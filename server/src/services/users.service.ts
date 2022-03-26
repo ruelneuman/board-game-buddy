@@ -1,7 +1,7 @@
 import User, { UserInput } from '../models/user.model';
 
 export const createUser = async (newUser: UserInput) => {
-  const user = await User.create<UserInput>(newUser);
+  const user = await User.create(newUser);
 
   const UserWithoutPassword = { ...user.toJSON(), password: undefined };
 
