@@ -1,9 +1,15 @@
 import { Request, Response } from 'express';
+import createHttpError from 'http-errors';
 import {
   newUserSchema,
   usersPaginationQuerySchema,
+  idParamSchema,
 } from '../validationSchemas';
-import { createUser, findPaginatedUsers } from '../services/users.service';
+import {
+  createUser,
+  findPaginatedUsers,
+  findUserById,
+} from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
   const options = usersPaginationQuerySchema.parse(req.query);
@@ -13,16 +19,22 @@ const getUsers = async (req: Request, res: Response) => {
   res.status(200).json(users);
 };
 
-const getUser = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const getUser = async (req: Request, res: Response) => {
+  const id = idParamSchema.parse(req.params.userId);
+
+  const user = await findUserById(id);
+
+  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
+
+  res.status(200).json(user);
 };
 
-const addNewUser = async (req: Request, res: Response) => {
+const createNewUser = async (req: Request, res: Response) => {
   const newUser = await newUserSchema.parseAsync(req.body);
 
   const user = await createUser(newUser);
 
-  return res.status(200).json(user);
+  res.status(200).json(user);
 };
 
 const getUserCollections = (_req: Request, res: Response) => {
@@ -56,7 +68,7 @@ const updateCurrentUserGameList = (_req: Request, res: Response) => {
 export default {
   getUsers,
   getUser,
-  addNewUser,
+  createNewUser,
   getUserCollections,
   getUserCollection,
   getCurrentUser,

@@ -34,6 +34,11 @@ export const usersPaginationQuerySchema = z.object({
   order: orderEnum.default(orderEnum.enum.desc),
 });
 
+export const idParamSchema = z.string({
+  required_error: 'userId paramater is required',
+  invalid_type_error: 'userId parameter must be a string',
+});
+
 export const newUserSchema = z.object({
   username: z
     .string({

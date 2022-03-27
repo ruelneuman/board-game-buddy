@@ -1,11 +1,15 @@
+import { isValidObjectId } from 'mongoose';
 import User, { UserInput } from '../models/user.model';
 
 export const createUser = async (newUser: UserInput) => {
   const user = await User.create(newUser);
 
-  const UserWithoutPassword = { ...user.toJSON(), password: undefined };
+  return { ...user.toJSON(), password: undefined };
+};
 
-  return UserWithoutPassword;
+export const findUserById = async (id: string) => {
+  if (!isValidObjectId(id)) return null;
+  return User.findById(id).exec();
 };
 
 export const findPaginatedUsers = async ({
