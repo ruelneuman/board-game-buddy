@@ -2,6 +2,7 @@ import { ErrorRequestHandler } from 'express';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 import { ZodError } from 'zod';
+import { UnauthorizedError } from 'express-jwt';
 import logger from '../utils/logger';
 
 interface ErrorResponse {
@@ -66,6 +67,12 @@ export const errorResponder: ErrorRequestHandler = (err, _req, res, next) => {
   if (err instanceof mongoose.Error.ValidationError) {
     errorResponse.status = 400;
     errorResponse.message = 'Validation failed';
+    return res.status(errorResponse.status).json(errorResponse);
+  }
+
+  if (err instanceof UnauthorizedError) {
+    errorResponse.status = err.status;
+    errorResponse.message = err.message;
     return res.status(errorResponse.status).json(errorResponse);
   }
 
