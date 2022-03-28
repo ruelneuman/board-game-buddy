@@ -2,7 +2,7 @@ import expressJwt from 'express-jwt';
 import { SECRET, JWT_AUDIENCE, JWT_ISSUER } from '../config';
 
 // eslint-disable-next-line import/prefer-default-export
-export const checkJwtAuth = expressJwt({
+export const expressJwtAuth = expressJwt({
   secret: SECRET,
   audience: JWT_AUDIENCE,
   issuer: JWT_ISSUER,
