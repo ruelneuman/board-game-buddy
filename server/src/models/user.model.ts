@@ -2,33 +2,13 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { GameListCategory } from '../types';
+import { UserDocument, GameListCategory } from '../types';
 
 const gameListDefault = () =>
   Object.values(GameListCategory).map((category) => ({
     listName: category,
     games: [],
   }));
-
-interface GameListDocument extends mongoose.Document {
-  listName: GameListCategory;
-  games: mongoose.Schema.Types.ObjectId[];
-}
-
-export interface UserInput {
-  username: string;
-  email: string;
-  password: string;
-  bio: string;
-}
-
-export interface UserDocument extends UserInput, mongoose.Document {
-  gameLists: GameListDocument;
-  reviews: mongoose.Schema.Types.ObjectId[];
-  createdAt: mongoose.Schema.Types.Date;
-  updatedAt: mongoose.Schema.Types.Date;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-}
 
 const userSchema = new mongoose.Schema(
   {

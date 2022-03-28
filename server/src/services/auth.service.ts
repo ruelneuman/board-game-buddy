@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { FilterQuery } from 'mongoose';
-import User, { UserDocument } from '../models/user.model';
+import User from '../models/user.model';
 import { SECRET, JWT_ISSUER, JWT_AUDIENCE } from '../config';
+import { UserDocument } from '../types';
 
 // eslint-disable-next-line import/prefer-default-export
 export const logIn = async ({

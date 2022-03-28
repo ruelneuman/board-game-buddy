@@ -4,17 +4,7 @@ import mongoose from 'mongoose';
 import { ZodError } from 'zod';
 import expressJwt from 'express-jwt';
 import logger from '../utils/logger';
-
-interface ErrorResponse {
-  message: string;
-  status: number;
-  details: ValidationErrorDetails[];
-}
-
-interface ValidationErrorDetails {
-  path: string | null;
-  messages: string[];
-}
+import { ErrorResponse, ValidationErrorDetails } from '../types';
 
 const httpErrorToResponse = (
   error: createHttpError.HttpError

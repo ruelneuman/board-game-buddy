@@ -1,15 +1,5 @@
 import mongoose from 'mongoose';
-import { GameRating } from '../types';
-
-export interface ReviewDocument extends mongoose.Document {
-  gameId: mongoose.Schema.Types.ObjectId;
-  userId: mongoose.Schema.Types.ObjectId;
-  rating: GameRating;
-  reviewText: string;
-  likes: mongoose.Schema.Types.ObjectId[];
-  createdAt: mongoose.Schema.Types.Date;
-  updatedAt: mongoose.Schema.Types.Date;
-}
+import { ReviewDocument, GameRating } from '../types';
 
 const reviewSchema = new mongoose.Schema(
   {
