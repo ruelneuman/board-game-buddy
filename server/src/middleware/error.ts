@@ -1,4 +1,4 @@
-import { ErrorRequestHandler } from 'express';
+import { ErrorRequestHandler, RequestHandler } from 'express';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 import { ZodError } from 'zod';
@@ -15,6 +15,10 @@ interface ValidationErrorDetails {
   path: string | null;
   messages: string[];
 }
+
+export const unknownEndpoint: RequestHandler = (_req, _res, next) => {
+  next(createHttpError(404, 'Unknown endpoint'));
+};
 
 export const errorLogger: ErrorRequestHandler = (err, _req, _res, next) => {
   logger.error(err);

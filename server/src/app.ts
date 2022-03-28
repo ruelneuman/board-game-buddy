@@ -4,7 +4,11 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import { MONGODB_URI } from './config';
 import router from './routes';
-import { errorLogger, errorResponder } from './middleware/error';
+import {
+  errorLogger,
+  errorResponder,
+  unknownEndpoint,
+} from './middleware/error';
 import logger from './utils/logger';
 
 mongoose
@@ -29,6 +33,7 @@ app.use(morgan(morganFormat));
 
 app.use(router);
 
+app.use(unknownEndpoint);
 app.use(errorLogger);
 app.use(errorResponder);
 
