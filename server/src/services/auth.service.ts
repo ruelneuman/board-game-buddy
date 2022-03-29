@@ -28,9 +28,9 @@ export const logIn = async ({
 
   if (!passwordCorrect) return null;
 
-  const userForToken = {
+  const userForToken: Express.User = {
     // eslint-disable-next-line no-underscore-dangle
-    _id: user._id as string,
+    id: user._id as string,
     username: user.username,
     email: user.email,
   };

@@ -45,8 +45,16 @@ const getUserCollection = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
-const getCurrentUser = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const getCurrentUser = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(404, 'User not found');
+
+  const { id } = req.user;
+
+  const user = await findUserById(id);
+
+  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
+
+  res.status(200).json(user);
 };
 
 const updateCurrentUser = (_req: Request, res: Response) => {
