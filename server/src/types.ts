@@ -14,7 +14,7 @@ export interface UserInput {
   username: string;
   email: string;
   password: string;
-  bio: string;
+  bio?: string;
 }
 
 export interface GameDocument extends mongoose.Document {
@@ -39,7 +39,7 @@ export interface GameListDocument extends mongoose.Document {
   games: mongoose.Schema.Types.ObjectId[];
 }
 
-export interface UserDocument extends UserInput, mongoose.Document {
+export interface UserDocument extends Required<UserInput>, mongoose.Document {
   gameLists: GameListDocument;
   reviews: mongoose.Schema.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;

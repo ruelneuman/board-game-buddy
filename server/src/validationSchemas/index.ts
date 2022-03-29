@@ -90,8 +90,10 @@ export const newUserSchema = z.object({
       invalid_type_error: 'Bio must be a string',
     })
     .max(5000, 'Bio must be 5000 or less characters')
-    .default(''),
+    .optional(),
 });
+
+export const userUpdateSchema = newUserSchema.partial();
 
 export const authenticationSchema = z
   .object({
