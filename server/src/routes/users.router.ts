@@ -9,8 +9,15 @@ router.get('/', controller.getUsers);
 router.post('/', controller.createNewUser);
 
 router.get('/current', expressJwtAuth, controller.getCurrentUser);
-router.put('/current', expressJwtAuth, controller.updateCurrentUser);
 router.delete('/current', expressJwtAuth, controller.deleteCurrentUser);
+
+router.put('/current/username', expressJwtAuth, controller.updateUsername);
+
+router.put('/current/email', expressJwtAuth, controller.updateEmail);
+
+router.put('/current/password', expressJwtAuth, controller.updatePassword);
+
+router.put('/current/bio', expressJwtAuth, controller.updateBio);
 
 router.get(
   '/current/collections/:gameListType',

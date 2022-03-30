@@ -93,7 +93,13 @@ export const newUserSchema = z.object({
     .optional(),
 });
 
-export const userUpdateSchema = newUserSchema.partial();
+export const usernameSchema = newUserSchema.pick({ username: true });
+
+export const emailSchema = newUserSchema.pick({ email: true });
+
+export const passwordSchema = newUserSchema.pick({ password: true });
+
+export const bioSchema = newUserSchema.pick({ bio: true }).required();
 
 export const authenticationSchema = z
   .object({
