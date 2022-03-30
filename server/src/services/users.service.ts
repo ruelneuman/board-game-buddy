@@ -8,6 +8,11 @@ export const createUser = async (newUser: UserInput) => {
   return { ...user.toJSON(), password: undefined };
 };
 
+export const deleteUserById = async (id: string) => {
+  if (!isValidObjectId(id)) return null;
+  return User.findByIdAndDelete(id).exec();
+};
+
 export const findUserById = async (id: string) => {
   if (!isValidObjectId(id)) return null;
   return User.findById(id).exec();

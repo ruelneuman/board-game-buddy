@@ -13,6 +13,7 @@ import {
   createUser,
   findPaginatedUsers,
   findUserById,
+  deleteUserById,
 } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
@@ -61,8 +62,16 @@ const getCurrentUser = async (req: Request, res: Response) => {
   res.status(200).json(user);
 };
 
-const deleteCurrentUser = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const deleteCurrentUser = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const { id } = req.user;
+
+  const user = await deleteUserById(id);
+
+  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
+
+  res.status(204).end();
 };
 
 const updateUsername = async (req: Request, res: Response) => {
@@ -116,7 +125,7 @@ const updatePassword = async (req: Request, res: Response) => {
 
   await user.save();
 
-  res.status(204).json();
+  res.status(204).end();
 };
 
 const updateBio = async (req: Request, res: Response) => {
