@@ -13,3 +13,4 @@ export const MONGODB_URI = getEnv('MONGODB_URI');
 export const SECRET = getEnv('SECRET');
 export const JWT_ISSUER = getEnv('JWT_ISSUER');
 export const JWT_AUDIENCE = getEnv('JWT_AUDIENCE');
+export const BGA_CLIENT_ID = getEnv('BGA_CLIENT_ID');

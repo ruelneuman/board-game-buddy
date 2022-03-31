@@ -6,6 +6,7 @@ const gameSchema = new mongoose.Schema(
     boardGameAtlasId: {
       type: String,
       required: true,
+      unique: true,
       match: [/^([a-zA-Z0-9]){10}$/, 'Invalid boardGameAtlasId'],
     },
     reviews: {
