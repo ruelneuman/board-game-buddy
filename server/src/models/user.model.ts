@@ -114,7 +114,7 @@ userSchema.methods.comparePassword = async function comparePassword(
 mongoosePaginate.paginate.options = {
   limit: 30,
   customLabels: {
-    totalDocs: 'userCount',
+    totalDocs: 'count',
     docs: 'users',
   },
 };
