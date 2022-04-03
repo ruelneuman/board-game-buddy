@@ -29,6 +29,32 @@ export class BoardGameArenaClient {
   async getGames(options: AxiosRequestConfig = {}) {
     return this.getRequest('/api/search', options);
   }
+
+  async getGamesByQueryParams(
+    params: Record<string, string> = {},
+    options: AxiosRequestConfig = {}
+  ) {
+    return this.getGames({ ...options, params });
+  }
+
+  // includes suggestions for games, mechanics, and categories
+  async getSearchSuggestion(query: string, options: AxiosRequestConfig = {}) {
+    return this.getRequest('/api/search-suggestions', {
+      ...options,
+      params: { name: query },
+    });
+  }
+
+  async getExtraSearchSuggestion(
+    type: 'mechanic' | 'category' | 'designer' | 'publisher',
+    query: string,
+    options: AxiosRequestConfig = {}
+  ) {
+    return this.getRequest('/api/search-suggestions/extras', {
+      ...options,
+      params: { type, name: query },
+    });
+  }
 }
 
 export const boardGameAtlasClient = new BoardGameArenaClient();
