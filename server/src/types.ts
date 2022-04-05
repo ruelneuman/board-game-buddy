@@ -17,8 +17,11 @@ export interface UserInput {
   bio?: string;
 }
 
-export interface GameDocument extends mongoose.Document {
+export interface GameInput {
   boardGameAtlasId: string;
+}
+
+export interface GameDocument extends GameInput, mongoose.Document {
   reviews: mongoose.Schema.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
