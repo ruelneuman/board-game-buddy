@@ -125,3 +125,43 @@ export const authenticationSchema = z
     message: 'Username or email is required',
     path: ['username', 'email'],
   });
+
+export const boardGameAtlasPublisherSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  url: z.string().url(),
+});
+
+export const boardGameAtlasDesignerSchema = boardGameAtlasPublisherSchema;
+
+export const boardGameAtlasGameSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description_preview: z.string(),
+  price: z.string(),
+  price_ca: z.string(),
+  price_uk: z.string(),
+  price_au: z.string(),
+  msrp: z.number(),
+  year_published: z.number().nullable(),
+  min_players: z.number().nullable(),
+  max_players: z.number().nullable(),
+  min_playtime: z.number().nullable(),
+  max_playtime: z.number().nullable(),
+  min_age: z.number().nullable(),
+  mechanics: z.array(z.object({ id: z.string(), url: z.string().url() })),
+  categories: z.array(z.object({ id: z.string(), url: z.string().url() })),
+  primary_publisher: z.union([boardGameAtlasPublisherSchema, z.object({})]),
+  primary_designer: z.union([boardGameAtlasDesignerSchema, z.object({})]),
+  artists: z.array(z.string()),
+  names: z.array(z.string()),
+  players: z.string(),
+  playtime: z.string(),
+  images: z.object({
+    thumb: z.string().url(),
+    small: z.string().url(),
+    medium: z.string().url(),
+    large: z.string().url(),
+    original: z.string().url(),
+  }),
+});
