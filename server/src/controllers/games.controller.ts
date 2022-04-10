@@ -10,7 +10,7 @@ import {
   orderEnum,
 } from '../validationSchemas';
 import bgaClient from '../utils/boardGameAtlasClient';
-import { assertNever } from '../utils/helpers';
+import { assertNever, getPaginationData } from '../utils/helpers';
 
 const getGames = async (req: Request, res: Response) => {
   const query = gamesQuerySchema.parse(req.query);
@@ -57,7 +57,10 @@ const getGames = async (req: Request, res: Response) => {
     })
   );
 
-  res.status(200).json({ games: combinedGames });
+  res.status(200).json({
+    games: combinedGames,
+    ...getPaginationData(parsedGameData.count, query.offset, query.limit),
+  });
 };
 
 const getGame = (_req: Request, res: Response) => {
