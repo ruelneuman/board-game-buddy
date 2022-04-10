@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import User from '../models/user.model';
 
-const usersSortEnum = z.enum(['username', 'createdAt'] as const);
-const orderEnum = z.enum(['asc', 'desc'] as const);
+export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
+export const gamesSortEnum = z.enum(['name', 'year'] as const);
+export const orderEnum = z.enum(['asc', 'desc'] as const);
 
 export const usersPaginationQuerySchema = z.object({
   limit: z
@@ -126,23 +127,54 @@ export const authenticationSchema = z
     path: ['username', 'email'],
   });
 
-export const boardGameAtlasPublisherSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  url: z.string().url(),
+export const gamesQuerySchema = z.object({
+  limit: z
+    .preprocess(
+      (limit) => parseInt(limit as string, 10),
+      z
+        .number({
+          required_error: 'Limit is required',
+          invalid_type_error: 'Limit must be a number',
+        })
+        .int('Limit must be an integer')
+        .min(0, 'Minimum limit is 0')
+        .max(100, 'Maximum limit is 100')
+    )
+    .default(30),
+  offset: z
+    .preprocess(
+      (offset) => parseInt(offset as string, 10),
+      z
+        .number({
+          required_error: 'Offset is required',
+          invalid_type_error: 'Offset must be a number',
+        })
+        .int('Offset must be an integer')
+        .min(0, 'Minimum offset is 0')
+    )
+    .default(0),
+  sort: gamesSortEnum.default(gamesSortEnum.enum.name),
+  order: orderEnum.default(orderEnum.enum.desc),
 });
+
+export const boardGameAtlasPublisherSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    url: z.string().url(),
+  })
+  .partial();
 
 export const boardGameAtlasDesignerSchema = boardGameAtlasPublisherSchema;
 
 export const boardGameAtlasGameSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  description_preview: z.string(),
+  name: z.string().nullable().default(null),
+  description_preview: z.string().default(''),
   price: z.string(),
   price_ca: z.string(),
   price_uk: z.string(),
   price_au: z.string(),
-  msrp: z.number(),
   year_published: z.number().nullable(),
   min_players: z.number().nullable(),
   max_players: z.number().nullable(),
@@ -151,12 +183,12 @@ export const boardGameAtlasGameSchema = z.object({
   min_age: z.number().nullable(),
   mechanics: z.array(z.object({ id: z.string(), url: z.string().url() })),
   categories: z.array(z.object({ id: z.string(), url: z.string().url() })),
-  primary_publisher: z.union([boardGameAtlasPublisherSchema, z.object({})]),
-  primary_designer: z.union([boardGameAtlasDesignerSchema, z.object({})]),
+  primary_publisher: boardGameAtlasPublisherSchema.default({}),
+  primary_designer: boardGameAtlasDesignerSchema.default({}),
   artists: z.array(z.string()),
   names: z.array(z.string()),
-  players: z.string(),
-  playtime: z.string(),
+  players: z.string().nullable().default(null),
+  playtime: z.string().nullable().default(null),
   images: z.object({
     thumb: z.string().url(),
     small: z.string().url(),
@@ -164,4 +196,9 @@ export const boardGameAtlasGameSchema = z.object({
     large: z.string().url(),
     original: z.string().url(),
   }),
+});
+
+export const boardGameAtlasSearchSchema = z.object({
+  games: z.array(boardGameAtlasGameSchema),
+  count: z.number(),
 });
