@@ -53,7 +53,7 @@ const getGames = async (req: Request, res: Response) => {
 
       const { id: boardGameAtlasId, ...gameWithoutId } = game;
 
-      return { ...gameWithoutId, ...gameFromDb.toJSON() };
+      return { ...gameFromDb.toJSON(), ...gameWithoutId };
     })
   );
 

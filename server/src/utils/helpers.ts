@@ -30,3 +30,25 @@ export const getPaginationData = (
     nextPage,
   };
 };
+
+const transformKeys = (
+  value: unknown,
+  transform: (inputString: string) => string
+): unknown => {
+  if (typeof value !== 'object' || value === null) return value;
+  if (value instanceof Date || value instanceof RegExp) return value;
+  if (Array.isArray(value))
+    return value.map((val) => transformKeys(val, transform));
+  return Object.fromEntries(
+    Object.entries(value).map(([key, val]) => [
+      transform(key),
+      transformKeys(val, transform),
+    ])
+  );
+};
+
+const snakeCaseToCamelCase = (inputString: string) =>
+  inputString.replace(/_(.)/g, (group) => group[1].toUpperCase());
+
+export const transformKeysSnakeToCamel = (value: unknown) =>
+  transformKeys(value, snakeCaseToCamelCase);

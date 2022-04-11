@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import User from '../models/user.model';
+import { transformKeysSnakeToCamel } from '../utils/helpers';
 
 export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
 export const gamesSortEnum = z.enum(['name', 'year'] as const);
@@ -167,36 +168,39 @@ export const boardGameAtlasPublisherSchema = z
 
 export const boardGameAtlasDesignerSchema = boardGameAtlasPublisherSchema;
 
-export const boardGameAtlasGameSchema = z.object({
-  id: z.string(),
-  name: z.string().nullable().default(null),
-  description_preview: z.string().default(''),
-  price: z.string(),
-  price_ca: z.string(),
-  price_uk: z.string(),
-  price_au: z.string(),
-  year_published: z.number().nullable(),
-  min_players: z.number().nullable(),
-  max_players: z.number().nullable(),
-  min_playtime: z.number().nullable(),
-  max_playtime: z.number().nullable(),
-  min_age: z.number().nullable(),
-  mechanics: z.array(z.object({ id: z.string(), url: z.string().url() })),
-  categories: z.array(z.object({ id: z.string(), url: z.string().url() })),
-  primary_publisher: boardGameAtlasPublisherSchema.default({}),
-  primary_designer: boardGameAtlasDesignerSchema.default({}),
-  artists: z.array(z.string()),
-  names: z.array(z.string()),
-  players: z.string().nullable().default(null),
-  playtime: z.string().nullable().default(null),
-  images: z.object({
-    thumb: z.string().url(),
-    small: z.string().url(),
-    medium: z.string().url(),
-    large: z.string().url(),
-    original: z.string().url(),
-  }),
-});
+export const boardGameAtlasGameSchema = z.preprocess(
+  (game) => transformKeysSnakeToCamel(game),
+  z.object({
+    id: z.string(),
+    name: z.string().nullable().default(null),
+    description_preview: z.string().default(''),
+    price: z.string(),
+    priceCa: z.string(),
+    priceUk: z.string(),
+    priceAu: z.string(),
+    yearPublished: z.number().nullable(),
+    minPlayers: z.number().nullable(),
+    maxPlayers: z.number().nullable(),
+    minPlaytime: z.number().nullable(),
+    maxPlaytime: z.number().nullable(),
+    minAge: z.number().nullable(),
+    mechanics: z.array(z.object({ id: z.string(), url: z.string().url() })),
+    categories: z.array(z.object({ id: z.string(), url: z.string().url() })),
+    primaryPublisher: boardGameAtlasPublisherSchema.default({}),
+    primaryDesigner: boardGameAtlasDesignerSchema.default({}),
+    artists: z.array(z.string()),
+    names: z.array(z.string()),
+    players: z.string().nullable().default(null),
+    playtime: z.string().nullable().default(null),
+    images: z.object({
+      thumb: z.string().url(),
+      small: z.string().url(),
+      medium: z.string().url(),
+      large: z.string().url(),
+      original: z.string().url(),
+    }),
+  })
+);
 
 export const boardGameAtlasSearchSchema = z.object({
   games: z.array(boardGameAtlasGameSchema),
