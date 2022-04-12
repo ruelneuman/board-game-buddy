@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import createHttpError from 'http-errors';
 import { BGA_API_URL, BGA_CLIENT_ID } from '../config';
 
 export class BoardGameArenaClient {
@@ -15,7 +16,11 @@ export class BoardGameArenaClient {
   }
 
   async getRequest(url: string, options: AxiosRequestConfig = {}) {
-    return this.httpClient.get(url, options);
+    try {
+      return await this.httpClient.get(url, options);
+    } catch (err) {
+      throw createHttpError(503, 'Board Game Atlas API error');
+    }
   }
 
   async getMechanics(options: AxiosRequestConfig = {}) {
