@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import User from '../models/user.model';
-import { transformKeysSnakeToCamel, assertNever } from '../utils/helpers';
+import { transformKeysSnakeToCamel } from '../utils/helpers';
 
 export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
 export const gamesSortEnum = z.enum(['name', 'year'] as const);
@@ -128,56 +128,35 @@ export const authenticationSchema = z
     path: ['username', 'email'],
   });
 
-export const gamesQuerySchema = z
-  .object({
-    limit: z
-      .preprocess(
-        (limit) => parseInt(limit as string, 10),
-        z
-          .number({
-            required_error: 'Limit is required',
-            invalid_type_error: 'Limit must be a number',
-          })
-          .int('Limit must be an integer')
-          .min(0, 'Minimum limit is 0')
-          .max(100, 'Maximum limit is 100')
-      )
-      .default(30),
-    offset: z
-      .preprocess(
-        (offset) => parseInt(offset as string, 10),
-        z
-          .number({
-            required_error: 'Offset is required',
-            invalid_type_error: 'Offset must be a number',
-          })
-          .int('Offset must be an integer')
-          .min(0, 'Minimum offset is 0')
-      )
-      .default(0),
-    sort: gamesSortEnum.default(gamesSortEnum.enum.name),
-    order: orderEnum.default(orderEnum.enum.desc),
-  })
-  .transform(({ sort, limit, offset, order }) => {
-    switch (sort) {
-      case gamesSortEnum.enum.name:
-        return {
-          limit,
-          skip: offset,
-          order_by: order === orderEnum.enum.asc ? 'name' : 'name_reverse',
-          ascending: 'true',
-        };
-      case gamesSortEnum.enum.year:
-        return {
-          limit,
-          skip: offset,
-          order_by: 'year_published',
-          ascending: order === orderEnum.enum.asc ? 'true' : 'false',
-        };
-      default:
-        return assertNever(sort);
-    }
-  });
+export const gamesQuerySchema = z.object({
+  limit: z
+    .preprocess(
+      (limit) => parseInt(limit as string, 10),
+      z
+        .number({
+          required_error: 'Limit is required',
+          invalid_type_error: 'Limit must be a number',
+        })
+        .int('Limit must be an integer')
+        .min(0, 'Minimum limit is 0')
+        .max(100, 'Maximum limit is 100')
+    )
+    .default(30),
+  offset: z
+    .preprocess(
+      (offset) => parseInt(offset as string, 10),
+      z
+        .number({
+          required_error: 'Offset is required',
+          invalid_type_error: 'Offset must be a number',
+        })
+        .int('Offset must be an integer')
+        .min(0, 'Minimum offset is 0')
+    )
+    .default(0),
+  sort: gamesSortEnum.default(gamesSortEnum.enum.name),
+  order: orderEnum.default(orderEnum.enum.desc),
+});
 
 export type GamesQuery = z.infer<typeof gamesQuerySchema>;
 
