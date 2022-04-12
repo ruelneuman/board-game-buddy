@@ -20,20 +20,23 @@ router.put('/current/password', expressJwtAuth, controller.updatePassword);
 router.put('/current/bio', expressJwtAuth, controller.updateBio);
 
 router.get(
-  '/current/collections/:gameListType',
+  '/current/collections/:collectionType',
   expressJwtAuth,
-  controller.getCurrentUserGameList
+  controller.getCurrentUserCollection
 );
 router.put(
-  '/current/collections/:gameListType',
+  '/current/collections/:collectionType',
   expressJwtAuth,
-  controller.updateCurrentUserGameList
+  controller.updateCurrentUserCollection
 );
 
 router.get('/:userId', controller.getUser);
 
 router.get('/:userId/collections', controller.getUserCollections);
 
-router.get('/:userId/collections/:gameListType', controller.getUserCollection);
+router.get(
+  '/:userId/collections/:collectionType',
+  controller.getUserCollection
+);
 
 export default router;

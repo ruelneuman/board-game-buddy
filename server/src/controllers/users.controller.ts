@@ -136,11 +136,11 @@ const updateBio = async (req: Request, res: Response) => {
   res.status(200).json({ bio: updatedUser.bio });
 };
 
-const getCurrentUserGameList = (_req: Request, res: Response) => {
+const getCurrentUserCollection = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
-const updateCurrentUserGameList = (_req: Request, res: Response) => {
+const updateCurrentUserCollection = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
@@ -156,6 +156,6 @@ export default {
   updatePassword,
   updateBio,
   deleteCurrentUser,
-  getCurrentUserGameList,
-  updateCurrentUserGameList,
+  getCurrentUserCollection,
+  updateCurrentUserCollection,
 };
