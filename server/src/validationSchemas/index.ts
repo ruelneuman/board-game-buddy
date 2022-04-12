@@ -179,6 +179,8 @@ export const gamesQuerySchema = z
     }
   });
 
+export type GamesQuery = z.infer<typeof gamesQuerySchema>;
+
 export const boardGameAtlasPublisherSchema = z
   .object({
     id: z.string(),
