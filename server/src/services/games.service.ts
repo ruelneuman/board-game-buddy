@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import Game from '../models/game.model';
 import bgaClient from '../utils/boardGameAtlasClient';
 import { GameDocument, GameInput } from '../types';
@@ -6,14 +7,14 @@ import {
   boardGameAtlasSearchSchema,
   gamesSortEnum,
   orderEnum,
+  BgaGame,
 } from '../validationSchemas';
 import { assertNever, getPaginationData } from '../utils/helpers';
 
-export const createGame = async (newGame: GameInput) => Game.create(newGame);
-
-export const findGameByBoardGameAtlasId = async (
-  boardGameAtlasId: GameDocument['boardGameAtlasId']
-) => Game.findOne({ boardGameAtlasId });
+const combineGameData = (gameFromDb: GameDocument, gameFromBga: BgaGame) => {
+  const { id: boardGameAtlasId, ...gameWithoutId } = gameFromBga;
+  return { ...gameFromDb.toJSON(), ...gameWithoutId };
+};
 
 const transormToBgaQuery = ({ sort, limit, offset, order }: GamesQuery) => {
   switch (sort) {
@@ -36,29 +37,56 @@ const transormToBgaQuery = ({ sort, limit, offset, order }: GamesQuery) => {
   }
 };
 
+export const createGame = async (newGame: GameInput) => Game.create(newGame);
+
+export const findGameById = async (id: string) => {
+  if (!isValidObjectId(id)) return null;
+  return Game.findById(id).exec();
+};
+
+export const findGameByBoardGameAtlasId = async (
+  boardGameAtlasId: GameDocument['boardGameAtlasId']
+) => Game.findOne({ boardGameAtlasId });
+
+export const findGameWithBgaDataById = async (id: string) => {
+  const game = await findGameById(id);
+
+  if (!game) return null;
+
+  const response = await bgaClient.getGamesByQueryParams({
+    ids: game.boardGameAtlasId,
+  });
+
+  const parsedGamesData = boardGameAtlasSearchSchema.parse(response.data);
+
+  const gameFromBga = parsedGamesData.games[0];
+
+  if (parsedGamesData.count === 0 || !gameFromBga) return null;
+
+  return combineGameData(game, gameFromBga);
+};
+
 export const getPaginatedGamesWithBgaData = async (query: GamesQuery) => {
   const bgaQuery = transormToBgaQuery(query);
 
   const response = await bgaClient.getGamesByQueryParams(bgaQuery);
 
-  const parsedGameData = boardGameAtlasSearchSchema.parse(response.data);
+  const parsedGamesData = boardGameAtlasSearchSchema.parse(response.data);
 
   const combinedGames = await Promise.all(
-    parsedGameData.games.map(async (game) => {
+    parsedGamesData.games.map(async (game) => {
       let gameFromDb = await findGameByBoardGameAtlasId(game.id);
 
       if (!gameFromDb) {
         gameFromDb = await createGame({ boardGameAtlasId: game.id });
       }
 
-      const { id: boardGameAtlasId, ...gameWithoutId } = game;
-
-      return { ...gameFromDb.toJSON(), ...gameWithoutId };
+      return combineGameData(gameFromDb, game);
     })
   );
 
   return {
     games: combinedGames,
-    ...getPaginationData(parsedGameData.count, query.offset, query.limit),
+    ...getPaginationData(parsedGamesData.count, query.offset, query.limit),
   };
 };

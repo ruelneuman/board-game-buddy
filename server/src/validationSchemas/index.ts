@@ -204,6 +204,8 @@ export const boardGameAtlasGameSchema = z.preprocess(
   })
 );
 
+export type BgaGame = z.infer<typeof boardGameAtlasGameSchema>;
+
 export const boardGameAtlasSearchSchema = z.object({
   games: z.array(boardGameAtlasGameSchema),
   count: z.number(),
