@@ -6,40 +6,14 @@ import {
 import {
   boardGameAtlasSearchSchema,
   gamesQuerySchema,
-  gamesSortEnum,
-  orderEnum,
 } from '../validationSchemas';
 import bgaClient from '../utils/boardGameAtlasClient';
-import { assertNever, getPaginationData } from '../utils/helpers';
+import { getPaginationData } from '../utils/helpers';
 
 const getGames = async (req: Request, res: Response) => {
   const query = gamesQuerySchema.parse(req.query);
 
-  const gamesQueryToBgaClientQuery = (gamesQuery: typeof query) => {
-    switch (query.sort) {
-      case gamesSortEnum.enum.name:
-        return {
-          limit: gamesQuery.limit.toString(),
-          skip: gamesQuery.offset.toString(),
-          order_by:
-            gamesQuery.order === orderEnum.enum.asc ? 'name' : 'name_reverse',
-          ascending: 'true',
-        };
-      case gamesSortEnum.enum.year:
-        return {
-          limit: gamesQuery.limit.toString(),
-          skip: gamesQuery.offset.toString(),
-          order_by: 'year_published',
-          ascending: gamesQuery.order === orderEnum.enum.asc ? 'true' : 'false',
-        };
-      default:
-        return assertNever(query.sort);
-    }
-  };
-
-  const bgaClientQuery = gamesQueryToBgaClientQuery(query);
-
-  const response = await bgaClient.getGamesByQueryParams(bgaClientQuery);
+  const response = await bgaClient.getGamesByQueryParams(query);
 
   const parsedGameData = boardGameAtlasSearchSchema.parse(response.data);
 
@@ -59,7 +33,7 @@ const getGames = async (req: Request, res: Response) => {
 
   res.status(200).json({
     games: combinedGames,
-    ...getPaginationData(parsedGameData.count, query.offset, query.limit),
+    ...getPaginationData(parsedGameData.count, query.skip, query.limit),
   });
 };
 

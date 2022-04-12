@@ -31,7 +31,7 @@ export class BoardGameArenaClient {
   }
 
   async getGamesByQueryParams(
-    params: Record<string, string> = {},
+    params: Record<string, string | number> = {},
     options: AxiosRequestConfig = {}
   ) {
     return this.getGames({ ...options, params });
@@ -47,12 +47,12 @@ export class BoardGameArenaClient {
 
   async getExtraSearchSuggestion(
     type: 'mechanic' | 'category' | 'designer' | 'publisher',
-    query: string,
+    searchTerm: string,
     options: AxiosRequestConfig = {}
   ) {
     return this.getRequest('/api/search-suggestions/extras', {
       ...options,
-      params: { type, name: query },
+      params: { type, name: searchTerm },
     });
   }
 }

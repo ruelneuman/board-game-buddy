@@ -26,6 +26,8 @@ mongoose
 
 const app = express();
 
+app.set('query parser', 'simple');
+
 app.use(express.json());
 
 const morganFormat = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
