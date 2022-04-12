@@ -4,11 +4,7 @@ import { GameDocument, GameInput } from '../types';
 import { GamesQuery, boardGameAtlasSearchSchema } from '../validationSchemas';
 import { getPaginationData } from '../utils/helpers';
 
-export const createGame = async (newGame: GameInput) => {
-  const game = await Game.create(newGame);
-
-  return game;
-};
+export const createGame = async (newGame: GameInput) => Game.create(newGame);
 
 export const findGameByBoardGameAtlasId = async (
   boardGameAtlasId: GameDocument['boardGameAtlasId']
@@ -32,6 +28,7 @@ export const getPaginatedGamesWithBgaData = async (query: GamesQuery) => {
       return { ...gameFromDb.toJSON(), ...gameWithoutId };
     })
   );
+
   return {
     games: combinedGames,
     ...getPaginationData(parsedGameData.count, query.skip, query.limit),
