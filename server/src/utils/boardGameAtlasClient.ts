@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import createHttpError from 'http-errors';
 import { BGA_API_URL, BGA_CLIENT_ID } from '../config';
+import { SearchSuggestionEnum } from '../validationSchemas';
 
 export class BoardGameArenaClient {
   httpClient: AxiosInstance;
@@ -54,8 +55,8 @@ export class BoardGameArenaClient {
   }
 
   async getExtraSearchSuggestion(
-    type: 'mechanic' | 'category' | 'designer' | 'publisher',
     searchTerm: string,
+    type: SearchSuggestionEnum,
     options: AxiosRequestConfig = {}
   ) {
     return this.getRequest('/api/search-suggestions/extras', {

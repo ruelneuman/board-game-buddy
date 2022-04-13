@@ -5,6 +5,14 @@ import { transformKeysSnakeToCamel } from '../utils/helpers';
 export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
 export const gamesSortEnum = z.enum(['name', 'year'] as const);
 export const orderEnum = z.enum(['asc', 'desc'] as const);
+export const searchSuggestionEnum = z.enum([
+  'mechanic',
+  'category',
+  'designer',
+  'publisher',
+] as const);
+
+export type SearchSuggestionEnum = z.infer<typeof searchSuggestionEnum>;
 
 export const usersPaginationQuerySchema = z.object({
   limit: z
@@ -158,13 +166,20 @@ export const gamesQuerySchema = z.object({
   order: orderEnum.default(orderEnum.enum.desc),
 });
 
+export const searchSuggestionQuerySchema = z.object({
+  search: z.string({
+    required_error: 'Search is required',
+    invalid_type_error: 'Search must be a string',
+  }),
+  type: searchSuggestionEnum,
+});
+
 export type GamesQuery = z.infer<typeof gamesQuerySchema>;
 
 export const boardGameAtlasPublisherSchema = z
   .object({
     id: z.string(),
     name: z.string(),
-    url: z.string().url(),
   })
   .partial();
 
@@ -252,3 +267,23 @@ export const boardGameAtlasCategoryIdToNameSchema =
       {}
     )
   );
+
+export const boardGameAtlasSearchSuggestionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const boardGameAtlasSearchSuggestionsSchema = z.union([
+  z.object({
+    designers: z.array(boardGameAtlasSearchSuggestionSchema),
+  }),
+  z.object({
+    publishers: z.array(boardGameAtlasSearchSuggestionSchema),
+  }),
+  z.object({
+    mechanics: z.array(boardGameAtlasSearchSuggestionSchema),
+  }),
+  z.object({
+    categories: z.array(boardGameAtlasSearchSuggestionSchema),
+  }),
+]);

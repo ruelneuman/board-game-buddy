@@ -10,6 +10,8 @@ import {
   BgaGame,
   boardGameAtlasMechanicIdToNameSchema,
   boardGameAtlasCategoryIdToNameSchema,
+  SearchSuggestionEnum,
+  boardGameAtlasSearchSuggestionsSchema,
 } from '../validationSchemas';
 import { assertNever, getPaginationData } from '../utils/helpers';
 
@@ -100,4 +102,13 @@ export const findMechanics = async () => {
 export const findCategories = async () => {
   const response = await bgaClient.getCategories();
   return boardGameAtlasCategoryIdToNameSchema.parse(response.data);
+};
+
+export const findSearchSuggestions = async (
+  searchTerm: string,
+  type: SearchSuggestionEnum
+) => {
+  const response = await bgaClient.getExtraSearchSuggestion(searchTerm, type);
+
+  return boardGameAtlasSearchSuggestionsSchema.parse(response.data);
 };

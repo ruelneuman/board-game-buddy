@@ -5,11 +5,16 @@ import {
   findMechanics,
   findCategories,
   findPaginatedGamesWithBgaData,
+  findSearchSuggestions,
 } from '../services/games.service';
-import { gamesQuerySchema, idParamSchema } from '../validationSchemas';
+import {
+  gamesQuerySchema,
+  idParamSchema,
+  searchSuggestionQuerySchema,
+} from '../validationSchemas';
 
 const getGames = async (req: Request, res: Response) => {
-  const query = gamesQuerySchema.parse(req.params);
+  const query = gamesQuerySchema.parse(req.query);
 
   const games = await findPaginatedGamesWithBgaData(query);
 
@@ -38,9 +43,18 @@ const getCategories = async (_req: Request, res: Response) => {
   res.status(200).json(categories);
 };
 
+const getSearchSuggestions = async (req: Request, res: Response) => {
+  const { search, type } = searchSuggestionQuerySchema.parse(req.query);
+
+  const suggestions = await findSearchSuggestions(search, type);
+
+  res.status(200).json(suggestions);
+};
+
 export default {
   getGames,
   getGame,
   getMechanics,
   getCategories,
+  getSearchSuggestions,
 };
