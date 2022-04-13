@@ -231,3 +231,24 @@ export const boardGameAtlasMechanicIdToNameSchema =
       {}
     )
   );
+
+export const boardGameAtlasCategoriesSchema = z.object({
+  categories: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+    })
+  ),
+});
+
+export const boardGameAtlasCategoryIdToNameSchema =
+  boardGameAtlasCategoriesSchema.transform((obj) =>
+    obj.categories.reduce<{ [categoryId: string]: string }>(
+      (transformedObject, category) => {
+        // eslint-disable-next-line no-param-reassign
+        transformedObject[category.id] = category.name;
+        return transformedObject;
+      },
+      {}
+    )
+  );

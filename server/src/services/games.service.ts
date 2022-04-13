@@ -9,6 +9,7 @@ import {
   orderEnum,
   BgaGame,
   boardGameAtlasMechanicIdToNameSchema,
+  boardGameAtlasCategoryIdToNameSchema,
 } from '../validationSchemas';
 import { assertNever, getPaginationData } from '../utils/helpers';
 
@@ -94,4 +95,9 @@ export const findPaginatedGamesWithBgaData = async (query: GamesQuery) => {
 export const findMechanics = async () => {
   const response = await bgaClient.getMechanics();
   return boardGameAtlasMechanicIdToNameSchema.parse(response.data);
+};
+
+export const findCategories = async () => {
+  const response = await bgaClient.getCategories();
+  return boardGameAtlasCategoryIdToNameSchema.parse(response.data);
 };

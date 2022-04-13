@@ -3,6 +3,7 @@ import createHttpError from 'http-errors';
 import {
   findGameWithBgaDataById,
   findMechanics,
+  findCategories,
   findPaginatedGamesWithBgaData,
 } from '../services/games.service';
 import { gamesQuerySchema, idParamSchema } from '../validationSchemas';
@@ -31,8 +32,15 @@ const getMechanics = async (_req: Request, res: Response) => {
   res.status(200).json(mechanics);
 };
 
+const getCategories = async (_req: Request, res: Response) => {
+  const categories = await findCategories();
+
+  res.status(200).json(categories);
+};
+
 export default {
   getGames,
   getGame,
   getMechanics,
+  getCategories,
 };
