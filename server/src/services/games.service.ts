@@ -8,6 +8,7 @@ import {
   gamesSortEnum,
   orderEnum,
   BgaGame,
+  boardGameAtlasMechanicIdToNameSchema,
 } from '../validationSchemas';
 import { assertNever, getPaginationData } from '../utils/helpers';
 
@@ -66,11 +67,10 @@ export const findGameWithBgaDataById = async (id: string) => {
   return combineGameData(game, gameFromBga);
 };
 
-export const getPaginatedGamesWithBgaData = async (query: GamesQuery) => {
+export const findPaginatedGamesWithBgaData = async (query: GamesQuery) => {
   const bgaQuery = transormToBgaQuery(query);
 
   const response = await bgaClient.getGamesByQueryParams(bgaQuery);
-
   const parsedGamesData = boardGameAtlasSearchSchema.parse(response.data);
 
   const combinedGames = await Promise.all(
@@ -89,4 +89,9 @@ export const getPaginatedGamesWithBgaData = async (query: GamesQuery) => {
     games: combinedGames,
     ...getPaginationData(parsedGamesData.count, query.offset, query.limit),
   };
+};
+
+export const findMechanics = async () => {
+  const response = await bgaClient.getMechanics();
+  return boardGameAtlasMechanicIdToNameSchema.parse(response.data);
 };

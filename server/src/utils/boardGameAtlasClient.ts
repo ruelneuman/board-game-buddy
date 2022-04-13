@@ -43,10 +43,13 @@ export class BoardGameArenaClient {
   }
 
   // includes suggestions for games, mechanics, and categories
-  async getSearchSuggestion(query: string, options: AxiosRequestConfig = {}) {
+  async getSearchSuggestion(
+    searchTerm: string,
+    options: AxiosRequestConfig = {}
+  ) {
     return this.getRequest('/api/search-suggestions', {
       ...options,
-      params: { name: query },
+      params: { name: searchTerm },
     });
   }
 

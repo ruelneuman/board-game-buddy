@@ -186,8 +186,8 @@ export const boardGameAtlasGameSchema = z.preprocess(
     minPlaytime: z.number().nullable(),
     maxPlaytime: z.number().nullable(),
     minAge: z.number().nullable(),
-    mechanics: z.array(z.object({ id: z.string(), url: z.string().url() })),
-    categories: z.array(z.object({ id: z.string(), url: z.string().url() })),
+    mechanics: z.array(z.object({ id: z.string() })),
+    categories: z.array(z.object({ id: z.string() })),
     primaryPublisher: boardGameAtlasPublisherSchema.default({}),
     primaryDesigner: boardGameAtlasDesignerSchema.default({}),
     artists: z.array(z.string()),
@@ -210,3 +210,24 @@ export const boardGameAtlasSearchSchema = z.object({
   games: z.array(boardGameAtlasGameSchema),
   count: z.number(),
 });
+
+export const boardGameAtlasMechanicsSchema = z.object({
+  mechanics: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+    })
+  ),
+});
+
+export const boardGameAtlasMechanicIdToNameSchema =
+  boardGameAtlasMechanicsSchema.transform((obj) =>
+    obj.mechanics.reduce<{ [mechanicId: string]: string }>(
+      (transformedObject, mechanic) => {
+        // eslint-disable-next-line no-param-reassign
+        transformedObject[mechanic.id] = mechanic.name;
+        return transformedObject;
+      },
+      {}
+    )
+  );

@@ -6,7 +6,7 @@ import { UserDocument, CollectionCategories } from '../types';
 
 const collectionsDefault = () =>
   Object.values(CollectionCategories).map((category) => ({
-    listName: category,
+    collectionName: category,
     games: [],
   }));
 
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
     collections: {
       type: [
         {
-          listName: {
+          collectionName: {
             type: String,
             required: true,
             enum: Object.values(CollectionCategories),

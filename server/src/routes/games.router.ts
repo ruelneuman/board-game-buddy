@@ -6,6 +6,8 @@ const router = Router();
 
 router.get('/', controller.getGames);
 
+router.get('/mechanics', controller.getMechanics);
+
 router.get('/:gameId', controller.getGame);
 
 export default router;
