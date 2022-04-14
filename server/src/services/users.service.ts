@@ -1,6 +1,6 @@
 import { isValidObjectId } from 'mongoose';
 import User from '../models/user.model';
-import { CollectionCategory, UserInput } from '../types';
+import { UserInput } from '../types';
 
 export const createUser = async (newUser: UserInput) => {
   const user = await User.create(newUser);
