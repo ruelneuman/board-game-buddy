@@ -38,12 +38,12 @@ export interface ReviewDocument extends mongoose.Document {
 }
 
 export interface CollectionDocument extends mongoose.Document {
-  listName: CollectionCategory;
+  collectionName: CollectionCategory;
   games: mongoose.Schema.Types.ObjectId[];
 }
 
 export interface UserDocument extends Required<UserInput>, mongoose.Document {
-  collections: CollectionDocument;
+  collections: CollectionDocument[];
   reviews: mongoose.Schema.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
