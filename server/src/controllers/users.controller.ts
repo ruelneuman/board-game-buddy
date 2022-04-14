@@ -14,6 +14,7 @@ import {
   findPaginatedUsers,
   findUserById,
   deleteUserById,
+  findCollectionsByUserId,
 } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
@@ -42,8 +43,15 @@ const createNewUser = async (req: Request, res: Response) => {
   res.status(200).json(user);
 };
 
-const getUserCollections = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const getUserCollections = async (req: Request, res: Response) => {
+  const userId = idParamSchema.parse(req.params.userId);
+
+  const collections = await findCollectionsByUserId(userId);
+
+  if (!collections)
+    throw createHttpError(404, `User with id '${userId}' not found`);
+
+  res.status(200).json(collections);
 };
 
 const getUserCollection = (_req: Request, res: Response) => {
