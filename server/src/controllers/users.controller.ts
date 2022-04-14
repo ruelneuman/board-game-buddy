@@ -44,12 +44,12 @@ const createNewUser = async (req: Request, res: Response) => {
 };
 
 const getUserCollections = async (req: Request, res: Response) => {
-  const userId = idParamSchema.parse(req.params.userId);
+  const id = idParamSchema.parse(req.params.userId);
 
-  const collections = await findCollectionsByUserId(userId);
+  const collections = await findCollectionsByUserId(id);
 
   if (!collections)
-    throw createHttpError(404, `User with id '${userId}' not found`);
+    throw createHttpError(404, `User with id '${id}' not found`);
 
   res.status(200).json(collections);
 };
@@ -140,8 +140,16 @@ const updateBio = async (req: Request, res: Response) => {
   res.status(200).json({ bio: updatedUser.bio });
 };
 
-const getCurrentUserCollections = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const getCurrentUserCollections = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const { id } = req.user;
+  const collections = await findCollectionsByUserId(id);
+
+  if (!collections)
+    throw createHttpError(404, `User with id '${id}' not found`);
+
+  res.status(200).json(collections);
 };
 
 const updateCurrentUserCollections = (_req: Request, res: Response) => {
