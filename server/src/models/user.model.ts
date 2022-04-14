@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { UserDocument, CollectionCategories } from '../types';
+import { UserDocument, CollectionCategory } from '../types';
 
 const collectionsDefault = () =>
-  Object.values(CollectionCategories).map((category) => ({
+  Object.values(CollectionCategory).map((category) => ({
     collectionName: category,
     games: [],
   }));
@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
           collectionName: {
             type: String,
             required: true,
-            enum: Object.values(CollectionCategories),
+            enum: Object.values(CollectionCategory),
           },
           games: {
             type: [

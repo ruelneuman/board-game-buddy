@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export type GameRating = 1 | 2 | 3 | 4 | 5;
 
-export enum CollectionCategories {
+export enum CollectionCategory {
   Wishlist = 'wishlist',
   Own = 'own',
   PreviouslyOwned = 'previouslyOwned',
@@ -38,7 +38,7 @@ export interface ReviewDocument extends mongoose.Document {
 }
 
 export interface CollectionDocument extends mongoose.Document {
-  listName: CollectionCategories;
+  listName: CollectionCategory;
   games: mongoose.Schema.Types.ObjectId[];
 }
 

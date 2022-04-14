@@ -54,10 +54,6 @@ const getUserCollections = async (req: Request, res: Response) => {
   res.status(200).json(collections);
 };
 
-const getUserCollection = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
-};
-
 const getCurrentUser = async (req: Request, res: Response) => {
   if (!req.user) throw createHttpError(401);
 
@@ -144,11 +140,11 @@ const updateBio = async (req: Request, res: Response) => {
   res.status(200).json({ bio: updatedUser.bio });
 };
 
-const getCurrentUserCollection = (_req: Request, res: Response) => {
+const getCurrentUserCollections = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
-const updateCurrentUserCollection = (_req: Request, res: Response) => {
+const updateCurrentUserCollections = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
@@ -157,13 +153,12 @@ export default {
   getUser,
   createNewUser,
   getUserCollections,
-  getUserCollection,
   getCurrentUser,
   updateUsername,
   updateEmail,
   updatePassword,
   updateBio,
   deleteCurrentUser,
-  getCurrentUserCollection,
-  updateCurrentUserCollection,
+  getCurrentUserCollections,
+  updateCurrentUserCollections,
 };

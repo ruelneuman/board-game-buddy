@@ -20,23 +20,18 @@ router.put('/current/password', expressJwtAuth, controller.updatePassword);
 router.put('/current/bio', expressJwtAuth, controller.updateBio);
 
 router.get(
-  '/current/collections/:collectionType',
+  '/current/collections',
   expressJwtAuth,
-  controller.getCurrentUserCollection
+  controller.getCurrentUserCollections
 );
 router.put(
-  '/current/collections/:collectionType',
+  '/current/collections',
   expressJwtAuth,
-  controller.updateCurrentUserCollection
+  controller.updateCurrentUserCollections
 );
 
 router.get('/:userId', controller.getUser);
 
 router.get('/:userId/collections', controller.getUserCollections);
-
-router.get(
-  '/:userId/collections/:collectionType',
-  controller.getUserCollection
-);
 
 export default router;
