@@ -18,6 +18,10 @@ import {
   deleteUserById,
   findCollections,
   addGameToCollection,
+  updateUsername,
+  updateEmail,
+  updateBio,
+  updatePassword,
 } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
@@ -85,14 +89,9 @@ const putUsername = async (req: Request, res: Response) => {
   const { username } = await usernameSchema.parseAsync(req.body);
   const { id } = req.user;
 
-  const user = await findUserById(id);
+  const updateResponse = await updateUsername(id, username);
 
-  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
-
-  user.username = username;
-  const updatedUser = await user.save();
-
-  res.status(200).json({ username: updatedUser.username });
+  res.status(200).json(updateResponse);
 };
 
 const putEmail = async (req: Request, res: Response) => {
@@ -101,14 +100,9 @@ const putEmail = async (req: Request, res: Response) => {
   const { email } = await emailSchema.parseAsync(req.body);
   const { id } = req.user;
 
-  const user = await findUserById(id);
+  const updateResponse = await updateEmail(id, email);
 
-  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
-
-  user.email = email;
-  const updatedUser = await user.save();
-
-  res.status(200).json({ email: updatedUser.email });
+  res.status(200).json(updateResponse);
 };
 
 const putPassword = async (req: Request, res: Response) => {
@@ -117,12 +111,7 @@ const putPassword = async (req: Request, res: Response) => {
   const { password } = passwordSchema.parse(req.body);
   const { id } = req.user;
 
-  const user = await findUserById(id);
-
-  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
-
-  user.password = password;
-  await user.save();
+  await updatePassword(id, password);
 
   res.status(204).end();
 };
@@ -133,14 +122,9 @@ const putBio = async (req: Request, res: Response) => {
   const { bio } = bioSchema.parse(req.body);
   const { id } = req.user;
 
-  const user = await findUserById(id);
+  const updateResponse = await updateBio(id, bio);
 
-  if (!user) throw createHttpError(404, `User with id '${id}' not found`);
-
-  user.bio = bio;
-  const updatedUser = await user.save();
-
-  res.status(200).json({ bio: updatedUser.bio });
+  res.status(200).json(updateResponse);
 };
 
 const getCurrentUserCollections = async (req: Request, res: Response) => {
@@ -162,9 +146,13 @@ const postGameToCollection = async (req: Request, res: Response) => {
   const { id: gameId } = gameForCollectionSchema.parse(req.body);
   const { id: userId } = req.user;
 
-  const games = await addGameToCollection(userId, collectionId, gameId);
+  const updateResponse = await addGameToCollection(
+    userId,
+    collectionId,
+    gameId
+  );
 
-  res.status(200).json(games);
+  res.status(200).json(updateResponse);
 };
 
 const removeGameFromCollection = (_req: Request, res: Response) => {

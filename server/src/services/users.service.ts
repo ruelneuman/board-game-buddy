@@ -1,7 +1,7 @@
 import { isValidObjectId, Types } from 'mongoose';
 import createHttpError from 'http-errors';
 import User from '../models/user.model';
-import { UserInput, CollectionDocument } from '../types';
+import { UserInput, UserDocument, CollectionDocument } from '../types';
 
 export const createUser = async (newUser: UserInput) => {
   const user = await User.create(newUser);
@@ -49,6 +49,60 @@ export const findPaginatedUsers = async ({
 export const findCollections = async (userId: string) => {
   if (!isValidObjectId(userId)) return null;
   return User.findById(userId).select('collections').exec();
+};
+
+export const updateUsername = async (
+  userId: string,
+  username: string
+): Promise<Pick<UserDocument, 'username'>> => {
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  user.username = username;
+  const updatedUser = await user.save();
+
+  return { username: updatedUser.username };
+};
+
+export const updateEmail = async (
+  userId: string,
+  email: string
+): Promise<Pick<UserDocument, 'email'>> => {
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  user.email = email;
+  const updatedUser = await user.save();
+
+  return { email: updatedUser.email };
+};
+
+export const updatePassword = async (
+  userId: string,
+  password: string
+): Promise<void> => {
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  user.password = password;
+  await user.save();
+};
+
+export const updateBio = async (
+  userId: string,
+  bio: string
+): Promise<Pick<UserDocument, 'bio'>> => {
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  user.bio = bio;
+  const updatedUser = await user.save();
+
+  return { bio: updatedUser.bio };
 };
 
 export const addGameToCollection = async (
