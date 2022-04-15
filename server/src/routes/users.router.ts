@@ -6,18 +6,18 @@ import controller from '../controllers/users.controller';
 const router = Router();
 
 router.get('/', controller.getUsers);
-router.post('/', controller.createNewUser);
+router.post('/', controller.postUser);
 
 router.get('/current', expressJwtAuth, controller.getCurrentUser);
 router.delete('/current', expressJwtAuth, controller.deleteCurrentUser);
 
-router.put('/current/username', expressJwtAuth, controller.updateUsername);
+router.put('/current/username', expressJwtAuth, controller.putUsername);
 
-router.put('/current/email', expressJwtAuth, controller.updateEmail);
+router.put('/current/email', expressJwtAuth, controller.putEmail);
 
-router.put('/current/password', expressJwtAuth, controller.updatePassword);
+router.put('/current/password', expressJwtAuth, controller.putPassword);
 
-router.put('/current/bio', expressJwtAuth, controller.updateBio);
+router.put('/current/bio', expressJwtAuth, controller.putBio);
 
 router.get(
   '/current/collections',
@@ -28,7 +28,7 @@ router.get(
 router.post(
   '/current/collections/:collectionId/games',
   expressJwtAuth,
-  controller.addGameToCollection
+  controller.postGameToCollection
 );
 
 router.delete(

@@ -1,6 +1,7 @@
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Types } from 'mongoose';
+import createHttpError from 'http-errors';
 import User from '../models/user.model';
-import { UserInput } from '../types';
+import { UserInput, CollectionDocument } from '../types';
 
 export const createUser = async (newUser: UserInput) => {
   const user = await User.create(newUser);
@@ -48,4 +49,35 @@ export const findPaginatedUsers = async ({
 export const findCollections = async (userId: string) => {
   if (!isValidObjectId(userId)) return null;
   return User.findById(userId).select('collections').exec();
+};
+
+export const addGameToCollection = async (
+  userId: string,
+  collectionId: string,
+  gameId: string
+): Promise<Pick<CollectionDocument, 'games'>> => {
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  const collection = user.collections.id(collectionId);
+
+  if (!collection)
+    throw createHttpError(
+      404,
+      `Collection with id '${collectionId}' not found`
+    );
+
+  const isDuplicate = collection.games.find(
+    // eslint-disable-next-line no-underscore-dangle
+    (game) => game._id.toString() === gameId
+  );
+
+  if (isDuplicate) throw createHttpError(400, 'Game already in collection');
+
+  collection.games.push(new Types.ObjectId(gameId));
+
+  await user.save();
+
+  return { games: collection.games };
 };
