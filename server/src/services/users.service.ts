@@ -45,7 +45,7 @@ export const findPaginatedUsers = async ({
   return users;
 };
 
-export const findCollectionsByUserId = async (id: string) => {
-  if (!isValidObjectId(id)) return null;
-  return User.findById(id).select('collections').exec();
+export const findCollections = async (userId: string) => {
+  if (!isValidObjectId(userId)) return null;
+  return User.findById(userId).select('collections').exec();
 };

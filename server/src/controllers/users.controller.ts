@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import {
@@ -7,14 +8,16 @@ import {
   passwordSchema,
   bioSchema,
   usersPaginationQuerySchema,
-  idParamSchema,
+  userIdSchema,
+  collectionIdSchema,
+  gameForCollectionSchema,
 } from '../validationSchemas';
 import {
   createUser,
   findPaginatedUsers,
   findUserById,
   deleteUserById,
-  findCollectionsByUserId,
+  findCollections,
 } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
@@ -26,7 +29,7 @@ const getUsers = async (req: Request, res: Response) => {
 };
 
 const getUser = async (req: Request, res: Response) => {
-  const id = idParamSchema.parse(req.params.userId);
+  const id = userIdSchema.parse(req.params.userId);
 
   const user = await findUserById(id);
 
@@ -44,9 +47,9 @@ const createNewUser = async (req: Request, res: Response) => {
 };
 
 const getUserCollections = async (req: Request, res: Response) => {
-  const id = idParamSchema.parse(req.params.userId);
+  const id = userIdSchema.parse(req.params.userId);
 
-  const collections = await findCollectionsByUserId(id);
+  const collections = await findCollections(id);
 
   if (!collections)
     throw createHttpError(404, `User with id '${id}' not found`);
@@ -144,7 +147,7 @@ const getCurrentUserCollections = async (req: Request, res: Response) => {
   if (!req.user) throw createHttpError(401);
 
   const { id } = req.user;
-  const collections = await findCollectionsByUserId(id);
+  const collections = await findCollections(id);
 
   if (!collections)
     throw createHttpError(404, `User with id '${id}' not found`);
@@ -152,8 +155,43 @@ const getCurrentUserCollections = async (req: Request, res: Response) => {
   res.status(200).json(collections);
 };
 
-const updateCurrentUserCollections = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const addGameToCollection = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const collectionId = collectionIdSchema.parse(req.params.collectionId);
+  const { id: gameId } = gameForCollectionSchema.parse(req.body);
+  const { id: userId } = req.user;
+
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  const collection = user.collections.id(collectionId);
+
+  if (!collection)
+    throw createHttpError(
+      404,
+      `Collection with id '${collectionId}' not found`
+    );
+
+  const isDuplicate = collection.games.find(
+    // eslint-disable-next-line no-underscore-dangle
+    (game) => game._id.toString() === gameId
+  );
+
+  if (isDuplicate) throw createHttpError(400, 'Game already in collection');
+
+  collection.games.push(new mongoose.Types.ObjectId(gameId));
+
+  const updatedUser = await user.save();
+
+  const updatedGames = updatedUser.collections.id(collectionId)?.games;
+
+  res.status(200).json({ games: updatedGames });
+};
+
+const removeGameFromCollection = (_req: Request, res: Response) => {
+  res.status(503).json({ error: 'not implemented' });
 };
 
 export default {
@@ -168,5 +206,6 @@ export default {
   updateBio,
   deleteCurrentUser,
   getCurrentUserCollections,
-  updateCurrentUserCollections,
+  addGameToCollection,
+  removeGameFromCollection,
 };

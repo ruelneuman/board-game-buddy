@@ -22,29 +22,29 @@ export interface GameInput {
 }
 
 export interface GameDocument extends GameInput, mongoose.Document {
-  reviews: mongoose.Schema.Types.ObjectId[];
+  reviews: mongoose.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
 }
 
 export interface ReviewDocument extends mongoose.Document {
-  gameId: mongoose.Schema.Types.ObjectId;
-  userId: mongoose.Schema.Types.ObjectId;
+  gameId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   rating: GameRating;
   reviewText: string;
-  likes: mongoose.Schema.Types.ObjectId[];
+  likes: mongoose.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
 }
 
 export interface CollectionDocument extends mongoose.Document {
   collectionName: CollectionCategory;
-  games: mongoose.Schema.Types.ObjectId[];
+  games: mongoose.Types.ObjectId[];
 }
 
 export interface UserDocument extends Required<UserInput>, mongoose.Document {
-  collections: CollectionDocument[];
-  reviews: mongoose.Schema.Types.ObjectId[];
+  collections: mongoose.Types.DocumentArray<CollectionDocument>;
+  reviews: mongoose.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
   updatedAt: mongoose.Schema.Types.Date;
   comparePassword(candidatePassword: string): Promise<boolean>;

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { z } from 'zod';
 import User from '../models/user.model';
 import { transformKeysSnakeToCamel } from '../utils/helpers';
@@ -44,9 +45,14 @@ export const usersPaginationQuerySchema = z.object({
   order: orderEnum.default(orderEnum.enum.desc),
 });
 
-export const idParamSchema = z.string({
-  required_error: 'userId paramater is required',
-  invalid_type_error: 'userId parameter must be a string',
+export const userIdSchema = z.string({
+  required_error: 'userId is required',
+  invalid_type_error: 'userId must be a string',
+});
+
+export const collectionIdSchema = z.string({
+  required_error: 'collectionId is required',
+  invalid_type_error: 'collectionId must be a string',
 });
 
 export const newUserSchema = z.object({
@@ -110,6 +116,15 @@ export const emailSchema = newUserSchema.pick({ email: true });
 export const passwordSchema = newUserSchema.pick({ password: true });
 
 export const bioSchema = newUserSchema.pick({ bio: true }).required();
+
+export const gameForCollectionSchema = z.object({
+  id: z
+    .string({
+      required_error: 'Id is required',
+      invalid_type_error: 'Id must be a string',
+    })
+    .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid id' }),
+});
 
 export const authenticationSchema = z
   .object({

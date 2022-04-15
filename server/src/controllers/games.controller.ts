@@ -9,7 +9,7 @@ import {
 } from '../services/games.service';
 import {
   gamesQuerySchema,
-  idParamSchema,
+  userIdSchema,
   searchSuggestionQuerySchema,
 } from '../validationSchemas';
 
@@ -22,7 +22,7 @@ const getGames = async (req: Request, res: Response) => {
 };
 
 const getGame = async (req: Request, res: Response) => {
-  const id = idParamSchema.parse(req.params.gameId);
+  const id = userIdSchema.parse(req.params.gameId);
 
   const game = await findGameWithBgaDataById(id);
 

@@ -24,10 +24,17 @@ router.get(
   expressJwtAuth,
   controller.getCurrentUserCollections
 );
-router.put(
-  '/current/collections',
+
+router.post(
+  '/current/collections/:collectionId/games',
   expressJwtAuth,
-  controller.updateCurrentUserCollections
+  controller.addGameToCollection
+);
+
+router.delete(
+  '/current/collections/:collectionId/games/:gameId',
+  expressJwtAuth,
+  controller.removeGameFromCollection
 );
 
 router.get('/:userId', controller.getUser);
