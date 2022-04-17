@@ -45,15 +45,28 @@ export const usersPaginationQuerySchema = z.object({
   order: orderEnum.default(orderEnum.enum.desc),
 });
 
-export const userIdSchema = z.string({
-  required_error: 'userId is required',
-  invalid_type_error: 'userId must be a string',
-});
+export const userIdSchema = z
+  .string({
+    required_error: 'User id is required',
+    invalid_type_error: 'User id must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid user id' });
 
-export const collectionIdSchema = z.string({
-  required_error: 'collectionId is required',
-  invalid_type_error: 'collectionId must be a string',
-});
+export const collectionIdSchema = z
+  .string({
+    required_error: 'Collection id is required',
+    invalid_type_error: 'Collection id must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), {
+    message: 'Invalid collection id',
+  });
+
+export const gameIdSchema = z
+  .string({
+    required_error: 'Game id is required',
+    invalid_type_error: 'Game id must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid game id' });
 
 export const newUserSchema = z.object({
   username: z

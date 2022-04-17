@@ -34,7 +34,7 @@ router.post(
 router.delete(
   '/current/collections/:collectionId/games/:gameId',
   expressJwtAuth,
-  controller.removeGameFromCollection
+  controller.deleteGameFromCollection
 );
 
 router.get('/:userId', controller.getUser);

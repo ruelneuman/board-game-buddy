@@ -8,6 +8,7 @@ import {
   bioSchema,
   usersPaginationQuerySchema,
   userIdSchema,
+  gameIdSchema,
   collectionIdSchema,
   gameForCollectionSchema,
 } from '../validationSchemas';
@@ -22,6 +23,7 @@ import {
   updateEmail,
   updateBio,
   updatePassword,
+  removeGameFromCollection,
 } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
@@ -155,8 +157,16 @@ const postGameToCollection = async (req: Request, res: Response) => {
   res.status(200).json(updateResponse);
 };
 
-const removeGameFromCollection = (_req: Request, res: Response) => {
-  res.status(503).json({ error: 'not implemented' });
+const deleteGameFromCollection = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const collectionId = collectionIdSchema.parse(req.params.collectionId);
+  const gameId = gameIdSchema.parse(req.params.gameId);
+  const { id: userId } = req.user;
+
+  await removeGameFromCollection(userId, collectionId, gameId);
+
+  res.status(204).end();
 };
 
 export default {
@@ -172,5 +182,5 @@ export default {
   deleteCurrentUser,
   getCurrentUserCollections,
   postGameToCollection,
-  removeGameFromCollection,
+  deleteGameFromCollection,
 };

@@ -135,3 +135,23 @@ export const addGameToCollection = async (
 
   return { games: collection.games };
 };
+
+export const removeGameFromCollection = async (
+  userId: string,
+  collectionId: string,
+  gameId: string
+): Promise<void> => {
+  const user = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      'collections._id': collectionId,
+    },
+    { $pull: { 'collections.$.games': gameId } }
+  );
+
+  if (!user)
+    throw createHttpError(
+      404,
+      `User with id ${userId} containing collection with id ${collectionId} not found`
+    );
+};
