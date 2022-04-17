@@ -45,7 +45,7 @@ const getUser = async (req: Request, res: Response) => {
 };
 
 const postUser = async (req: Request, res: Response) => {
-  const newUser = await newUserSchema.parseAsync(req.body);
+  const newUser = newUserSchema.parse(req.body);
 
   const user = await createUser(newUser);
 
@@ -88,7 +88,7 @@ const deleteCurrentUser = async (req: Request, res: Response) => {
 const putUsername = async (req: Request, res: Response) => {
   if (!req.user) throw createHttpError(401);
 
-  const { username } = await usernameSchema.parseAsync(req.body);
+  const { username } = usernameSchema.parse(req.body);
   const { id } = req.user;
 
   const updateResponse = await updateUsername(id, username);
@@ -99,7 +99,7 @@ const putUsername = async (req: Request, res: Response) => {
 const putEmail = async (req: Request, res: Response) => {
   if (!req.user) throw createHttpError(401);
 
-  const { email } = await emailSchema.parseAsync(req.body);
+  const { email } = emailSchema.parse(req.body);
   const { id } = req.user;
 
   const updateResponse = await updateEmail(id, email);

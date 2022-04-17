@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { z } from 'zod';
-import User from '../models/user.model';
 import { transformKeysSnakeToCamel } from '../utils/helpers';
 
 export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
@@ -79,33 +78,13 @@ export const newUserSchema = z.object({
     .regex(
       /^[a-zA-Z0-9]+$/,
       'Username must contain only alphanumeric characters'
-    )
-    .refine(
-      async (username) => {
-        const user = await User.findOne({ username });
-        return !user;
-      },
-      {
-        message: 'Username is already taken',
-        path: ['username'],
-      }
     ),
   email: z
     .string({
       required_error: 'Email is required',
       invalid_type_error: 'Email must be a string',
     })
-    .email()
-    .refine(
-      async (email) => {
-        const user = await User.findOne({ email });
-        return !user;
-      },
-      {
-        message: 'Email is already taken',
-        path: ['email'],
-      }
-    ),
+    .email(),
   password: z
     .string({
       required_error: 'Password is required',

@@ -4,6 +4,16 @@ import User from '../models/user.model';
 import { UserInput, UserDocument, CollectionDocument } from '../types';
 
 export const createUser = async (newUser: UserInput) => {
+  const userWithMatchingEmail = await User.findOne({ email: newUser.email });
+  if (userWithMatchingEmail)
+    throw createHttpError(400, 'Email isalready taken');
+
+  const userWithMatchingUsername = await User.findOne({
+    username: newUser.username,
+  });
+  if (userWithMatchingUsername)
+    throw createHttpError(400, 'Username is already taken');
+
   const user = await User.create(newUser);
 
   return { ...user.toJSON(), password: undefined };
@@ -55,6 +65,12 @@ export const updateUsername = async (
   userId: string,
   username: string
 ): Promise<Pick<UserDocument, 'username'>> => {
+  const userWithMatchingUsername = await User.findOne({
+    username,
+  });
+  if (userWithMatchingUsername)
+    throw createHttpError(400, 'Username is already taken');
+
   const user = await findUserById(userId);
 
   if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
@@ -69,6 +85,10 @@ export const updateEmail = async (
   userId: string,
   email: string
 ): Promise<Pick<UserDocument, 'email'>> => {
+  const userWithMatchingEmail = await User.findOne({ email });
+  if (userWithMatchingEmail)
+    throw createHttpError(400, 'Email isalready taken');
+
   const user = await findUserById(userId);
 
   if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
