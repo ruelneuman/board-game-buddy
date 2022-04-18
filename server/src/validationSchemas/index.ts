@@ -20,12 +20,12 @@ export const usersPaginationQuerySchema = z.object({
       (limit) => parseInt(limit as string, 10),
       z
         .number({
-          required_error: 'Limit is required',
-          invalid_type_error: 'Limit must be a number',
+          required_error: 'limit is required',
+          invalid_type_error: 'limit must be a number',
         })
-        .int('Limit must be an integer')
-        .min(0, 'Minimum limit is 0')
-        .max(100, 'Maximum limit is 100')
+        .int('limit must be an integer')
+        .min(0, 'minimum limit is 0')
+        .max(100, 'maximum limit is 100')
     )
     .default(30),
   offset: z
@@ -33,11 +33,11 @@ export const usersPaginationQuerySchema = z.object({
       (offset) => parseInt(offset as string, 10),
       z
         .number({
-          required_error: 'Offset is required',
-          invalid_type_error: 'Offset must be a number',
+          required_error: 'offset is required',
+          invalid_type_error: 'offset must be a number',
         })
-        .int('Offset must be an integer')
-        .min(0, 'Minimum offset is 0')
+        .int('offset must be an integer')
+        .min(0, 'minimum offset is 0')
     )
     .default(0),
   sort: usersSortEnum.default(usersSortEnum.enum.username),
@@ -46,58 +46,58 @@ export const usersPaginationQuerySchema = z.object({
 
 export const userIdSchema = z
   .string({
-    required_error: 'User id is required',
-    invalid_type_error: 'User id must be a string',
+    required_error: 'user id is required',
+    invalid_type_error: 'user id must be a string',
   })
   .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid user id' });
 
 export const collectionIdSchema = z
   .string({
-    required_error: 'Collection id is required',
-    invalid_type_error: 'Collection id must be a string',
+    required_error: 'collection id is required',
+    invalid_type_error: 'collection id must be a string',
   })
   .refine((id) => mongoose.isValidObjectId(id), {
-    message: 'Invalid collection id',
+    message: 'invalid collection id',
   });
 
 export const gameIdSchema = z
   .string({
-    required_error: 'Game id is required',
-    invalid_type_error: 'Game id must be a string',
+    required_error: 'game id is required',
+    invalid_type_error: 'game id must be a string',
   })
   .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid game id' });
 
 export const newUserSchema = z.object({
   username: z
     .string({
-      required_error: 'Username is required',
-      invalid_type_error: 'Username must be a string',
+      required_error: 'username is required',
+      invalid_type_error: 'username must be a string',
     })
-    .min(3, 'Username must be at least 3 characters')
-    .max(20, 'Username must be 20 or less characters')
+    .min(3, 'username must be at least 3 characters')
+    .max(20, 'username must be 20 or less characters')
     .regex(
       /^[a-zA-Z0-9]+$/,
-      'Username must contain only alphanumeric characters'
+      'username must contain only alphanumeric characters'
     ),
   email: z
     .string({
-      required_error: 'Email is required',
-      invalid_type_error: 'Email must be a string',
+      required_error: 'email is required',
+      invalid_type_error: 'email must be a string',
     })
     .email(),
   password: z
     .string({
-      required_error: 'Password is required',
-      invalid_type_error: 'Password must be a string',
+      required_error: 'password is required',
+      invalid_type_error: 'password must be a string',
     })
-    .min(8, 'Password must be at least 8 characters')
-    .max(40, 'Password must be 40 or less characters'),
+    .min(8, 'password must be at least 8 characters')
+    .max(40, 'password must be 40 or less characters'),
   bio: z
     .string({
-      required_error: 'Bio is required',
-      invalid_type_error: 'Bio must be a string',
+      required_error: 'bio is required',
+      invalid_type_error: 'bio must be a string',
     })
-    .max(5000, 'Bio must be 5000 or less characters')
+    .max(5000, 'bio must be 5000 or less characters')
     .optional(),
 });
 
@@ -109,11 +109,45 @@ export const passwordSchema = newUserSchema.pick({ password: true });
 
 export const bioSchema = newUserSchema.pick({ bio: true }).required();
 
+export const newReviewSchema = z.object({
+  gameId: z
+    .string({
+      required_error: 'gameId is required',
+      invalid_type_error: 'gameId must be a string',
+    })
+    .refine((id) => mongoose.isValidObjectId(id), {
+      message: 'invalid gameId',
+    }),
+  userId: z
+    .string({
+      required_error: 'userId is required',
+      invalid_type_error: 'userId must be a string',
+    })
+    .refine((id) => mongoose.isValidObjectId(id), {
+      message: 'invalid userId',
+    }),
+  rating: z
+    .number({
+      required_error: 'rating is required',
+      invalid_type_error: 'rating must be a string',
+    })
+    .int('rating must be an integer')
+    .min(1, 'rating must be at least 1')
+    .max(5, 'rating can be at most 5'),
+  reviewText: z
+    .string({
+      required_error: 'reviewText is required',
+      invalid_type_error: 'reviewText must be a string',
+    })
+    .max(5000, 'review must be 5000 or less characters')
+    .optional(),
+});
+
 export const gameForCollectionSchema = z.object({
   id: z
     .string({
-      required_error: 'Id is required',
-      invalid_type_error: 'Id must be a string',
+      required_error: 'id is required',
+      invalid_type_error: 'id must be a string',
     })
     .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid id' }),
 });
@@ -122,24 +156,24 @@ export const authenticationSchema = z
   .object({
     username: z
       .string({
-        required_error: 'Username is required',
-        invalid_type_error: 'Username must be a string',
+        required_error: 'username is required',
+        invalid_type_error: 'username must be a string',
       })
       .optional(),
     email: z
       .string({
-        required_error: 'Email is required',
-        invalid_type_error: 'Email must be a string',
+        required_error: 'email is required',
+        invalid_type_error: 'email must be a string',
       })
       .email()
       .optional(),
     password: z.string({
-      required_error: 'Password is required',
-      invalid_type_error: 'Password must be a string',
+      required_error: 'password is required',
+      invalid_type_error: 'password must be a string',
     }),
   })
   .refine((object) => object.email || object.username, {
-    message: 'Username or email is required',
+    message: 'username or email is required',
     path: ['username', 'email'],
   });
 
@@ -149,12 +183,12 @@ export const gamesQuerySchema = z.object({
       (limit) => parseInt(limit as string, 10),
       z
         .number({
-          required_error: 'Limit is required',
-          invalid_type_error: 'Limit must be a number',
+          required_error: 'limit is required',
+          invalid_type_error: 'limit must be a number',
         })
-        .int('Limit must be an integer')
-        .min(0, 'Minimum limit is 0')
-        .max(100, 'Maximum limit is 100')
+        .int('limit must be an integer')
+        .min(0, 'minimum limit is 0')
+        .max(100, 'maximum limit is 100')
     )
     .default(30),
   offset: z
@@ -162,11 +196,11 @@ export const gamesQuerySchema = z.object({
       (offset) => parseInt(offset as string, 10),
       z
         .number({
-          required_error: 'Offset is required',
-          invalid_type_error: 'Offset must be a number',
+          required_error: 'offset is required',
+          invalid_type_error: 'offset must be a number',
         })
-        .int('Offset must be an integer')
-        .min(0, 'Minimum offset is 0')
+        .int('offset must be an integer')
+        .min(0, 'minimum offset is 0')
     )
     .default(0),
   sort: gamesSortEnum.default(gamesSortEnum.enum.name),
@@ -175,8 +209,8 @@ export const gamesQuerySchema = z.object({
 
 export const searchSuggestionQuerySchema = z.object({
   search: z.string({
-    required_error: 'Search is required',
-    invalid_type_error: 'Search must be a string',
+    required_error: 'search is required',
+    invalid_type_error: 'search must be a string',
   }),
   type: searchSuggestionEnum,
 });

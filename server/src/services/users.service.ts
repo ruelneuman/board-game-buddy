@@ -6,7 +6,7 @@ import { UserInput, UserDocument, CollectionDocument } from '../types';
 export const createUser = async (newUser: UserInput) => {
   const userWithMatchingEmail = await User.findOne({ email: newUser.email });
   if (userWithMatchingEmail)
-    throw createHttpError(400, 'Email isalready taken');
+    throw createHttpError(400, 'Email is already taken');
 
   const userWithMatchingUsername = await User.findOne({
     username: newUser.username,
@@ -87,7 +87,7 @@ export const updateEmail = async (
 ): Promise<Pick<UserDocument, 'email'>> => {
   const userWithMatchingEmail = await User.findOne({ email });
   if (userWithMatchingEmail)
-    throw createHttpError(400, 'Email isalready taken');
+    throw createHttpError(400, 'Email is already taken');
 
   const user = await findUserById(userId);
 
@@ -174,4 +174,16 @@ export const removeGameFromCollection = async (
       404,
       `User with id ${userId} containing collection with id ${collectionId} not found`
     );
+};
+
+export const addReviewToUser = async (userId: string, reviewId: string) => {
+  const user = await findUserById(userId);
+
+  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+
+  user.reviews.push(new Types.ObjectId(reviewId));
+
+  const updatedUser = await user.save();
+
+  return updatedUser;
 };

@@ -1,4 +1,5 @@
-import { isValidObjectId } from 'mongoose';
+import { Types, isValidObjectId } from 'mongoose';
+import createHttpError from 'http-errors';
 import Game from '../models/game.model';
 import bgaClient from '../utils/boardGameAtlasClient';
 import { GameDocument, GameInput } from '../types';
@@ -111,4 +112,16 @@ export const findSearchSuggestions = async (
   const response = await bgaClient.getExtraSearchSuggestion(searchTerm, type);
 
   return boardGameAtlasSearchSuggestionsSchema.parse(response.data);
+};
+
+export const addReviewToGame = async (gameId: string, reviewId: string) => {
+  const game = await findGameById(gameId);
+
+  if (!game) throw createHttpError(404, `Game with id '${gameId}' not found`);
+
+  game.reviews.push(new Types.ObjectId(reviewId));
+
+  const updatedGame = await game.save();
+
+  return updatedGame;
 };

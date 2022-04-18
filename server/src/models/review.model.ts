@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ReviewDocument, GameRating } from '../types';
+import { ReviewDocument } from '../types';
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -19,7 +19,7 @@ const reviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
       validate: {
-        validator: (rating: GameRating) => Number.isInteger(rating),
+        validator: (rating: number) => Number.isInteger(rating),
         message: 'Rating must be an integer',
       },
     },

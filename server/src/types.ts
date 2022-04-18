@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-export type GameRating = 1 | 2 | 3 | 4 | 5;
-
 export enum CollectionCategory {
   Wishlist = 'wishlist',
   Own = 'own',
@@ -21,6 +19,13 @@ export interface GameInput {
   boardGameAtlasId: string;
 }
 
+export interface ReviewInput {
+  gameId: string;
+  userId: string;
+  rating: number;
+  reviewText?: string;
+}
+
 export interface GameDocument extends GameInput, mongoose.Document {
   reviews: mongoose.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
@@ -30,7 +35,7 @@ export interface GameDocument extends GameInput, mongoose.Document {
 export interface ReviewDocument extends mongoose.Document {
   gameId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
-  rating: GameRating;
+  rating: number;
   reviewText: string;
   likes: mongoose.Types.ObjectId[];
   createdAt: mongoose.Schema.Types.Date;
