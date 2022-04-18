@@ -1,6 +1,6 @@
 import { Types, isValidObjectId } from 'mongoose';
 import createHttpError from 'http-errors';
-import { ReviewInput } from '../types';
+import { ReviewInput, ReviewDocument } from '../types';
 import Review from '../models/review.model';
 import { addReviewToUser } from './users.service';
 import { addReviewToGame } from './games.service';
@@ -38,4 +38,28 @@ export const createReview = async (newReview: ReviewInput) => {
   );
 
   return review;
+};
+
+export const likeReview = async (
+  reviewId: string,
+  userId: string
+): Promise<Pick<ReviewDocument, 'likes'>> => {
+  const review = await findReviewById(reviewId);
+
+  if (!review)
+    throw createHttpError(404, `Review with id ${reviewId} not found`);
+
+  const isDuplicate = review.likes.find((like) => like.toString() === userId);
+
+  if (isDuplicate)
+    throw createHttpError(
+      400,
+      `User has already liked review with id ${reviewId}`
+    );
+
+  review.likes.push(new Types.ObjectId(userId));
+
+  const updatedReview = await review.save();
+
+  return { likes: updatedReview.likes };
 };

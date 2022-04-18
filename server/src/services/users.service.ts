@@ -132,7 +132,7 @@ export const addGameToCollection = async (
 ): Promise<Pick<CollectionDocument, 'games'>> => {
   const user = await findUserById(userId);
 
-  if (!user) throw createHttpError(404, `User with id '${userId}' not found`);
+  if (!user) throw createHttpError(404, `User with id ${userId} not found`);
 
   const collection = user.collections.id(collectionId);
 
@@ -147,7 +147,8 @@ export const addGameToCollection = async (
     (game) => game._id.toString() === gameId
   );
 
-  if (isDuplicate) throw createHttpError(400, 'Game already in collection');
+  if (isDuplicate)
+    throw createHttpError(400, `Game with id ${gameId} already in collection`);
 
   collection.games.push(new Types.ObjectId(gameId));
 

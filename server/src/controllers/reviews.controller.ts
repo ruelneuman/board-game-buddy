@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
 import { newReviewSchema, reviewIdSchema } from '../validationSchemas';
-import { createReview, findReviewById } from '../services/reviews.service';
+import {
+  createReview,
+  findReviewById,
+  likeReview,
+} from '../services/reviews.service';
 
 const getReviews = (_req: Request, res: Response) => {
   // get reviews by game or by user
@@ -39,8 +43,14 @@ const deleteReview = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
-const postLike = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const postLike = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const reviewId = reviewIdSchema.parse(req.params.reviewId);
+
+  const response = await likeReview(reviewId, req.user.id);
+
+  res.status(200).json(response);
 };
 
 const deleteLike = (_req: Request, res: Response) => {
