@@ -1,18 +1,22 @@
-import { Types } from 'mongoose';
+import { Types, isValidObjectId } from 'mongoose';
 import createHttpError from 'http-errors';
 import { ReviewInput } from '../types';
 import Review from '../models/review.model';
 import { addReviewToUser } from './users.service';
 import { addReviewToGame } from './games.service';
 
-// eslint-disable-next-line import/prefer-default-export
+export const findReviewById = async (id: string) => {
+  if (!isValidObjectId(id)) return null;
+  return Review.findById(id).exec();
+};
+
 export const createReview = async (newReview: ReviewInput) => {
   const { userId, gameId } = newReview;
 
   const matchingReview = await Review.findOne({
     gameId,
     userId,
-  });
+  }).exec();
 
   if (matchingReview)
     throw createHttpError(

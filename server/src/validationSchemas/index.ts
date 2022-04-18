@@ -67,6 +67,15 @@ export const gameIdSchema = z
   })
   .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid game id' });
 
+export const reviewIdSchema = z
+  .string({
+    required_error: 'review id is required',
+    invalid_type_error: 'review id must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), {
+    message: 'Invalid review id',
+  });
+
 export const newUserSchema = z.object({
   username: z
     .string({
