@@ -49,7 +49,7 @@ export const likeReview = async (
   if (!review)
     throw createHttpError(404, `Review with id ${reviewId} not found`);
 
-  const isDuplicate = review.likes.find((like) => like.toString() === userId);
+  const isDuplicate = review.likes.some((like) => like.toString() === userId);
 
   if (isDuplicate)
     throw createHttpError(
@@ -58,6 +58,32 @@ export const likeReview = async (
     );
 
   review.likes.push(new Types.ObjectId(userId));
+
+  const updatedReview = await review.save();
+
+  return { likes: updatedReview.likes };
+};
+
+export const unlikeReview = async (
+  reviewId: string,
+  userId: string
+): Promise<Pick<ReviewDocument, 'likes'>> => {
+  const review = await findReviewById(reviewId);
+
+  if (!review)
+    throw createHttpError(404, `Review with id ${reviewId} not found`);
+
+  const isAlreadyLiked = review.likes.some(
+    (like) => like.toString() === userId
+  );
+
+  if (!isAlreadyLiked)
+    throw createHttpError(
+      400,
+      `Review with id ${reviewId} has not yet been liked`
+    );
+
+  review.likes = review.likes.filter((like) => like.toString() !== userId);
 
   const updatedReview = await review.save();
 

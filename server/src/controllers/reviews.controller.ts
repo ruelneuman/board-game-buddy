@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { newReviewSchema, reviewIdSchema } from '../validationSchemas';
+import {
+  newReviewSchema,
+  reviewIdSchema,
+  userIdSchema,
+} from '../validationSchemas';
 import {
   createReview,
   findReviewById,
   likeReview,
+  unlikeReview,
 } from '../services/reviews.service';
 
 const getReviews = (_req: Request, res: Response) => {
@@ -28,7 +33,8 @@ const postReview = async (req: Request, res: Response) => {
 
   const newReview = newReviewSchema.parse(req.body);
 
-  if (req.user.id !== newReview.userId) throw createHttpError(401);
+  if (req.user.id !== newReview.userId)
+    throw createHttpError(401, 'User id does not match user id on review');
 
   const review = await createReview(newReview);
 
@@ -53,8 +59,18 @@ const postLike = async (req: Request, res: Response) => {
   res.status(200).json(response);
 };
 
-const deleteLike = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const deleteLike = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const reviewId = reviewIdSchema.parse(req.params.reviewId);
+  const userId = userIdSchema.parse(req.params.userId);
+
+  if (req.user.id !== userId)
+    throw createHttpError(401, 'User id does not match user id on like');
+
+  const response = await unlikeReview(reviewId, userId);
+
+  res.status(200).json(response);
 };
 
 export default {

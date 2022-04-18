@@ -142,7 +142,7 @@ export const addGameToCollection = async (
       `Collection with id '${collectionId}' not found`
     );
 
-  const isDuplicate = collection.games.find(
+  const isDuplicate = collection.games.some(
     // eslint-disable-next-line no-underscore-dangle
     (game) => game._id.toString() === gameId
   );
