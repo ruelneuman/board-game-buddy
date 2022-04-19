@@ -3,20 +3,24 @@ import createHttpError from 'http-errors';
 import {
   newReviewSchema,
   reviewIdSchema,
+  reviewsPaginationQuerySchema,
   userIdSchema,
 } from '../validationSchemas';
 import {
   createReview,
   findReviewById,
+  findPaginatedReviews,
   likeReview,
   unlikeReview,
   deleteReviewById,
 } from '../services/reviews.service';
 
-const getReviews = (_req: Request, res: Response) => {
-  // get reviews by game or by user
-  // sorted by rating or most recent or alphabetically
-  res.status(501).json({ error: 'Not implemented' });
+const getReviews = async (req: Request, res: Response) => {
+  const query = reviewsPaginationQuerySchema.parse(req.query);
+
+  const reviews = await findPaginatedReviews(query);
+
+  res.status(200).json(reviews);
 };
 
 const getReview = async (req: Request, res: Response) => {

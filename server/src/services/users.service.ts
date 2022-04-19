@@ -2,6 +2,7 @@ import { isValidObjectId, Types } from 'mongoose';
 import createHttpError from 'http-errors';
 import User from '../models/user.model';
 import { UserInput, UserDocument, CollectionDocument } from '../types';
+import { UsersPaginationQuery } from '../validationSchemas';
 
 export const createUser = async (newUser: UserInput) => {
   const userWithMatchingEmail = await User.findOne({ email: newUser.email });
@@ -34,12 +35,7 @@ export const findPaginatedUsers = async ({
   offset,
   sort,
   order,
-}: {
-  limit: number;
-  offset: number;
-  sort: string;
-  order: string;
-}) => {
+}: UsersPaginationQuery) => {
   const options = {
     limit,
     offset,
@@ -51,9 +47,7 @@ export const findPaginatedUsers = async ({
     },
   };
 
-  const users = await User.paginate({}, options);
-
-  return users;
+  return User.paginate({}, options);
 };
 
 export const findCollections = async (userId: string) => {

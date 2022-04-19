@@ -4,6 +4,27 @@ import { ReviewInput, ReviewDocument } from '../types';
 import Review from '../models/review.model';
 import { addReviewToUser, removeReviewFromUser } from './users.service';
 import { addReviewToGame, removeReviewFromGame } from './games.service';
+import { ReviewsPaginationQuery } from '../validationSchemas';
+
+export const findPaginatedReviews = async ({
+  limit,
+  offset,
+  sort,
+  order,
+}: ReviewsPaginationQuery) => {
+  const options = {
+    limit,
+    offset,
+    sort: {
+      [sort]: order,
+    },
+    collation: {
+      locale: 'en',
+    },
+  };
+
+  return Review.paginate({}, options);
+};
 
 export const findReviewById = async (id: string) => {
   if (!isValidObjectId(id)) return null;

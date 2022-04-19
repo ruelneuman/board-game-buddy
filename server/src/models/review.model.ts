@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import { ReviewDocument } from '../types';
 
 const reviewSchema = new mongoose.Schema(
@@ -43,4 +44,18 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model<ReviewDocument>('Review', reviewSchema);
+// set default pagination options
+mongoosePaginate.paginate.options = {
+  limit: 30,
+  customLabels: {
+    totalDocs: 'count',
+    docs: 'reviews',
+  },
+};
+
+reviewSchema.plugin(mongoosePaginate);
+
+export default mongoose.model<
+  ReviewDocument,
+  mongoose.PaginateModel<ReviewDocument>
+>('Review', reviewSchema);

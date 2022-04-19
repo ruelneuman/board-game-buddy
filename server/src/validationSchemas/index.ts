@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { transformKeysSnakeToCamel } from '../utils/helpers';
 
 export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
+export const reviewsSortEnum = z.enum(['rating', 'createdAt'] as const);
 export const gamesSortEnum = z.enum(['name', 'year'] as const);
 export const orderEnum = z.enum(['asc', 'desc'] as const);
 export const searchSuggestionEnum = z.enum([
@@ -14,7 +15,7 @@ export const searchSuggestionEnum = z.enum([
 
 export type SearchSuggestionEnum = z.infer<typeof searchSuggestionEnum>;
 
-export const usersPaginationQuerySchema = z.object({
+export const basePaginationQuerySchema = z.object({
   limit: z
     .preprocess(
       (limit) => parseInt(limit as string, 10),
@@ -40,9 +41,34 @@ export const usersPaginationQuerySchema = z.object({
         .min(0, 'minimum offset is 0')
     )
     .default(0),
-  sort: usersSortEnum.default(usersSortEnum.enum.username),
   order: orderEnum.default(orderEnum.enum.desc),
 });
+
+export const usersPaginationQuerySchema = basePaginationQuerySchema.merge(
+  z.object({
+    sort: usersSortEnum.default(usersSortEnum.enum.createdAt),
+  })
+);
+
+export type UsersPaginationQuery = z.infer<typeof usersPaginationQuerySchema>;
+
+export const reviewsPaginationQuerySchema = basePaginationQuerySchema.merge(
+  z.object({
+    sort: reviewsSortEnum.default(reviewsSortEnum.enum.createdAt),
+  })
+);
+
+export type ReviewsPaginationQuery = z.infer<
+  typeof reviewsPaginationQuerySchema
+>;
+
+export const gamesPaginationQuerySchema = basePaginationQuerySchema.merge(
+  z.object({
+    sort: gamesSortEnum.default(gamesSortEnum.enum.name),
+  })
+);
+
+export type GamesPaginationQuery = z.infer<typeof gamesPaginationQuerySchema>;
 
 export const userIdSchema = z
   .string({
@@ -186,36 +212,6 @@ export const authenticationSchema = z
     path: ['username', 'email'],
   });
 
-export const gamesQuerySchema = z.object({
-  limit: z
-    .preprocess(
-      (limit) => parseInt(limit as string, 10),
-      z
-        .number({
-          required_error: 'limit is required',
-          invalid_type_error: 'limit must be a number',
-        })
-        .int('limit must be an integer')
-        .min(0, 'minimum limit is 0')
-        .max(100, 'maximum limit is 100')
-    )
-    .default(30),
-  offset: z
-    .preprocess(
-      (offset) => parseInt(offset as string, 10),
-      z
-        .number({
-          required_error: 'offset is required',
-          invalid_type_error: 'offset must be a number',
-        })
-        .int('offset must be an integer')
-        .min(0, 'minimum offset is 0')
-    )
-    .default(0),
-  sort: gamesSortEnum.default(gamesSortEnum.enum.name),
-  order: orderEnum.default(orderEnum.enum.desc),
-});
-
 export const searchSuggestionQuerySchema = z.object({
   search: z.string({
     required_error: 'search is required',
@@ -223,8 +219,6 @@ export const searchSuggestionQuerySchema = z.object({
   }),
   type: searchSuggestionEnum,
 });
-
-export type GamesQuery = z.infer<typeof gamesQuerySchema>;
 
 export const boardGameAtlasPublisherSchema = z
   .object({

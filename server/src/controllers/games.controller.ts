@@ -8,13 +8,13 @@ import {
   findSearchSuggestions,
 } from '../services/games.service';
 import {
-  gamesQuerySchema,
+  gamesPaginationQuerySchema,
   userIdSchema,
   searchSuggestionQuerySchema,
 } from '../validationSchemas';
 
 const getGames = async (req: Request, res: Response) => {
-  const query = gamesQuerySchema.parse(req.query);
+  const query = gamesPaginationQuerySchema.parse(req.query);
 
   const games = await findPaginatedGamesWithBgaData(query);
 

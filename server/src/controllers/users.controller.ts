@@ -27,9 +27,9 @@ import {
 } from '../services/users.service';
 
 const getUsers = async (req: Request, res: Response) => {
-  const options = usersPaginationQuerySchema.parse(req.query);
+  const query = usersPaginationQuerySchema.parse(req.query);
 
-  const users = await findPaginatedUsers(options);
+  const users = await findPaginatedUsers(query);
 
   res.status(200).json(users);
 };

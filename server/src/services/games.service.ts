@@ -4,7 +4,7 @@ import Game from '../models/game.model';
 import bgaClient from '../utils/boardGameAtlasClient';
 import { GameDocument, GameInput } from '../types';
 import {
-  GamesQuery,
+  GamesPaginationQuery,
   boardGameAtlasSearchSchema,
   gamesSortEnum,
   orderEnum,
@@ -21,7 +21,12 @@ const combineGameData = (gameFromDb: GameDocument, gameFromBga: BgaGame) => {
   return { ...gameFromDb.toJSON(), ...gameWithoutId };
 };
 
-const transormToBgaQuery = ({ sort, limit, offset, order }: GamesQuery) => {
+const transormToBgaQuery = ({
+  sort,
+  limit,
+  offset,
+  order,
+}: GamesPaginationQuery) => {
   switch (sort) {
     case gamesSortEnum.enum.name:
       return {
@@ -71,7 +76,9 @@ export const findGameWithBgaDataById = async (id: string) => {
   return combineGameData(game, gameFromBga);
 };
 
-export const findPaginatedGamesWithBgaData = async (query: GamesQuery) => {
+export const findPaginatedGamesWithBgaData = async (
+  query: GamesPaginationQuery
+) => {
   const bgaQuery = transormToBgaQuery(query);
 
   const response = await bgaClient.getGamesByQueryParams(bgaQuery);
