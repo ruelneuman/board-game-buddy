@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import User from '../models/user.model';
 import { SECRET, JWT_ISSUER, JWT_AUDIENCE } from '../config';
 import { UserDocument } from '../types';
@@ -30,7 +30,7 @@ export const logIn = async ({
 
   const userForToken: Express.User = {
     // eslint-disable-next-line no-underscore-dangle
-    id: user._id as string,
+    id: (user._id as Types.ObjectId).toString(),
     username: user.username,
     email: user.email,
   };
