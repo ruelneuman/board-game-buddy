@@ -110,15 +110,6 @@ userSchema.methods.comparePassword = async function comparePassword(
   }
 };
 
-// set default pagination options
-mongoosePaginate.paginate.options = {
-  limit: 30,
-  customLabels: {
-    totalDocs: 'count',
-    docs: 'users',
-  },
-};
-
 userSchema.plugin(mongoosePaginate);
 
 export default mongoose.model<

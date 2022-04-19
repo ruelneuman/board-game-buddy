@@ -44,15 +44,6 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-// set default pagination options
-mongoosePaginate.paginate.options = {
-  limit: 30,
-  customLabels: {
-    totalDocs: 'count',
-    docs: 'reviews',
-  },
-};
-
 reviewSchema.plugin(mongoosePaginate);
 
 export default mongoose.model<

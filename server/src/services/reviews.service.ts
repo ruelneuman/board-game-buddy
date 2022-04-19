@@ -21,6 +21,10 @@ export const findPaginatedReviews = async ({
     collation: {
       locale: 'en',
     },
+    customLabels: {
+      totalDocs: 'count',
+      docs: 'reviews',
+    },
   };
 
   return Review.paginate({}, options);

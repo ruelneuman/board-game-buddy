@@ -45,6 +45,10 @@ export const findPaginatedUsers = async ({
     collation: {
       locale: 'en',
     },
+    customLabels: {
+      totalDocs: 'count',
+      docs: 'users',
+    },
   };
 
   return User.paginate({}, options);
