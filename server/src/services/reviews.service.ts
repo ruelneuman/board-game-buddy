@@ -2,8 +2,8 @@ import { Types, isValidObjectId } from 'mongoose';
 import createHttpError from 'http-errors';
 import { ReviewInput, ReviewDocument } from '../types';
 import Review from '../models/review.model';
-import { addReviewToUser } from './users.service';
-import { addReviewToGame } from './games.service';
+import { addReviewToUser, removeReviewFromUser } from './users.service';
+import { addReviewToGame, removeReviewFromGame } from './games.service';
 
 export const findReviewById = async (id: string) => {
   if (!isValidObjectId(id)) return null;
@@ -36,6 +36,19 @@ export const createReview = async (newReview: ReviewInput) => {
     // eslint-disable-next-line no-underscore-dangle
     (review._id as Types.ObjectId).toString()
   );
+
+  return review;
+};
+
+export const deleteReviewById = async (reviewId: string) => {
+  if (!isValidObjectId(reviewId)) return null;
+  const review = await Review.findByIdAndDelete(reviewId).exec();
+
+  if (!review) return null;
+
+  await removeReviewFromGame(review.gameId.toString(), reviewId);
+
+  await removeReviewFromUser(review.userId.toString(), reviewId);
 
   return review;
 };

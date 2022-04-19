@@ -10,6 +10,7 @@ import {
   findReviewById,
   likeReview,
   unlikeReview,
+  deleteReviewById,
 } from '../services/reviews.service';
 
 const getReviews = (_req: Request, res: Response) => {
@@ -45,8 +46,22 @@ const putReview = (_req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 };
 
-const deleteReview = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const deleteReview = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const reviewId = reviewIdSchema.parse(req.params.reviewId);
+
+  const review = await findReviewById(reviewId);
+
+  if (!review)
+    throw createHttpError(404, `Review with id '${reviewId}' not found`);
+
+  if (req.user.id !== review.userId.toString())
+    throw createHttpError(401, 'User id does not match user id on review');
+
+  await deleteReviewById(reviewId);
+
+  res.status(204).end();
 };
 
 const postLike = async (req: Request, res: Response) => {

@@ -125,3 +125,12 @@ export const addReviewToGame = async (gameId: string, reviewId: string) => {
 
   return updatedGame;
 };
+
+export const removeReviewFromGame = async (gameId: string, reviewId: string) =>
+  Game.findByIdAndUpdate(
+    gameId,
+    {
+      $pull: { reviews: reviewId },
+    },
+    { new: true }
+  );

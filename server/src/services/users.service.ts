@@ -161,20 +161,27 @@ export const removeGameFromCollection = async (
   userId: string,
   collectionId: string,
   gameId: string
-): Promise<void> => {
+): Promise<Pick<CollectionDocument, 'games'>> => {
   const user = await User.findOneAndUpdate(
     {
       _id: userId,
       'collections._id': collectionId,
     },
-    { $pull: { 'collections.$.games': gameId } }
+    { $pull: { 'collections.$.games': gameId } },
+    { new: true }
   );
 
-  if (!user)
+  if (!user) throw createHttpError(404, `User with id ${userId} not found`);
+
+  const collection = user.collections.id(collectionId);
+
+  if (!collection)
     throw createHttpError(
       404,
-      `User with id ${userId} containing collection with id ${collectionId} not found`
+      `Collection with id ${collectionId} not found in user with id ${userId}`
     );
+
+  return { games: collection.games };
 };
 
 export const addReviewToUser = async (userId: string, reviewId: string) => {
@@ -188,3 +195,12 @@ export const addReviewToUser = async (userId: string, reviewId: string) => {
 
   return updatedUser;
 };
+
+export const removeReviewFromUser = async (userId: string, reviewId: string) =>
+  User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { reviews: reviewId },
+    },
+    { new: true }
+  );
