@@ -185,6 +185,10 @@ export const newReviewSchema = z.object({
     .optional(),
 });
 
+export const newReviewWithoutUserIdSchema = newReviewSchema.omit({
+  userId: true,
+});
+
 export const gameForCollectionSchema = z.object({
   id: z
     .string({
