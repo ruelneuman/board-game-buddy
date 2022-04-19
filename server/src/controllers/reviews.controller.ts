@@ -13,6 +13,7 @@ import {
   likeReview,
   unlikeReview,
   deleteReviewById,
+  updateReview,
 } from '../services/reviews.service';
 
 const getReviews = async (req: Request, res: Response) => {
@@ -39,15 +40,39 @@ const postReview = async (req: Request, res: Response) => {
   const newReview = newReviewSchema.parse(req.body);
 
   if (req.user.id !== newReview.userId)
-    throw createHttpError(401, 'User id does not match user id on review');
+    throw createHttpError(401, 'User id does not match userId on review');
 
   const review = await createReview(newReview);
 
   res.status(200).json(review);
 };
 
-const putReview = (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+const putReview = async (req: Request, res: Response) => {
+  if (!req.user) throw createHttpError(401);
+
+  const newReview = newReviewSchema.parse(req.body);
+  const reviewId = reviewIdSchema.parse(req.params.reviewId);
+
+  const reviewToUpdate = await findReviewById(reviewId);
+
+  if (!reviewToUpdate)
+    throw createHttpError(404, `Review with id ${reviewId} not found`);
+
+  if (req.user.id !== reviewToUpdate.userId.toString())
+    throw createHttpError(
+      401,
+      'User id does not match userId on existing review'
+    );
+
+  if (newReview.userId !== reviewToUpdate.userId.toString())
+    throw createHttpError(400, 'New userId must match existing userId');
+
+  if (newReview.gameId !== reviewToUpdate.gameId.toString())
+    throw createHttpError(400, `New gameId must match existing gameId`);
+
+  const updatedReview = await updateReview(reviewId, newReview);
+
+  res.status(200).json(updatedReview);
 };
 
 const deleteReview = async (req: Request, res: Response) => {

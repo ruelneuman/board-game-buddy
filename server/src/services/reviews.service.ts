@@ -74,6 +74,25 @@ export const createReview = async (newReview: ReviewInput) => {
   return review;
 };
 
+export const updateReview = async (
+  reviewId: string,
+  newReview: ReviewInput
+) => {
+  const updatedReview = await Review.findOneAndUpdate(
+    { _id: reviewId },
+    newReview,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!updatedReview)
+    throw createHttpError(404, `Review with id ${reviewId} not found`);
+
+  return updatedReview;
+};
+
 export const deleteReviewById = async (reviewId: string) => {
   if (!isValidObjectId(reviewId)) return null;
   const review = await Review.findByIdAndDelete(reviewId).exec();
