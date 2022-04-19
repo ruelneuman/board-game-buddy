@@ -15,6 +15,47 @@ export const searchSuggestionEnum = z.enum([
 
 export type SearchSuggestionEnum = z.infer<typeof searchSuggestionEnum>;
 
+export const ratingSchema = z
+  .number({
+    required_error: 'rating is required',
+    invalid_type_error: 'rating must be a number',
+  })
+  .int('rating must be an integer')
+  .min(1, 'rating must be at least 1')
+  .max(5, 'rating can be at most 5');
+
+export const gameIdSchema = z
+  .string({
+    required_error: 'gameId is required',
+    invalid_type_error: 'gameId must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid game id' });
+
+export const reviewIdSchema = z
+  .string({
+    required_error: 'reviewId is required',
+    invalid_type_error: 'reviewId must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), {
+    message: 'Invalid reviewId',
+  });
+
+export const userIdSchema = z
+  .string({
+    required_error: 'userId is required',
+    invalid_type_error: 'userId must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid userId' });
+
+export const collectionIdSchema = z
+  .string({
+    required_error: 'collectionId is required',
+    invalid_type_error: 'collectionId must be a string',
+  })
+  .refine((id) => mongoose.isValidObjectId(id), {
+    message: 'invalid collectionId',
+  });
+
 export const basePaginationQuerySchema = z.object({
   limit: z
     .preprocess(
@@ -55,6 +96,11 @@ export type UsersPaginationQuery = z.infer<typeof usersPaginationQuerySchema>;
 export const reviewsPaginationQuerySchema = basePaginationQuerySchema.merge(
   z.object({
     sort: reviewsSortEnum.default(reviewsSortEnum.enum.createdAt),
+    gameId: gameIdSchema.optional(),
+    userId: userIdSchema.optional(),
+    rating: z
+      .preprocess((limit) => parseInt(limit as string, 10), ratingSchema)
+      .optional(),
   })
 );
 
@@ -69,38 +115,6 @@ export const gamesPaginationQuerySchema = basePaginationQuerySchema.merge(
 );
 
 export type GamesPaginationQuery = z.infer<typeof gamesPaginationQuerySchema>;
-
-export const userIdSchema = z
-  .string({
-    required_error: 'user id is required',
-    invalid_type_error: 'user id must be a string',
-  })
-  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid user id' });
-
-export const collectionIdSchema = z
-  .string({
-    required_error: 'collection id is required',
-    invalid_type_error: 'collection id must be a string',
-  })
-  .refine((id) => mongoose.isValidObjectId(id), {
-    message: 'invalid collection id',
-  });
-
-export const gameIdSchema = z
-  .string({
-    required_error: 'game id is required',
-    invalid_type_error: 'game id must be a string',
-  })
-  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid game id' });
-
-export const reviewIdSchema = z
-  .string({
-    required_error: 'review id is required',
-    invalid_type_error: 'review id must be a string',
-  })
-  .refine((id) => mongoose.isValidObjectId(id), {
-    message: 'Invalid review id',
-  });
 
 export const newUserSchema = z.object({
   username: z
@@ -161,14 +175,7 @@ export const newReviewSchema = z.object({
     .refine((id) => mongoose.isValidObjectId(id), {
       message: 'invalid userId',
     }),
-  rating: z
-    .number({
-      required_error: 'rating is required',
-      invalid_type_error: 'rating must be a string',
-    })
-    .int('rating must be an integer')
-    .min(1, 'rating must be at least 1')
-    .max(5, 'rating can be at most 5'),
+  rating: ratingSchema,
   reviewText: z
     .string({
       required_error: 'reviewText is required',

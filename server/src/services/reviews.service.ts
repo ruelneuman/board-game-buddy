@@ -11,6 +11,9 @@ export const findPaginatedReviews = async ({
   offset,
   sort,
   order,
+  gameId,
+  userId,
+  rating,
 }: ReviewsPaginationQuery) => {
   const options = {
     limit,
@@ -27,7 +30,13 @@ export const findPaginatedReviews = async ({
     },
   };
 
-  return Review.paginate({}, options);
+  const query: Record<string, string | number> = {};
+
+  if (gameId) query.gameId = gameId;
+  if (userId) query.userId = userId;
+  if (rating) query.rating = rating;
+
+  return Review.paginate(query, options);
 };
 
 export const findReviewById = async (id: string) => {
