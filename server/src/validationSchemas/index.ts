@@ -111,6 +111,21 @@ export type ReviewsPaginationQuery = z.infer<
 export const gamesPaginationQuerySchema = basePaginationQuerySchema.merge(
   z.object({
     sort: gamesSortEnum.default(gamesSortEnum.enum.name),
+    name: z
+      .string({
+        required_error: 'name is required',
+        invalid_type_error: 'name must be a string',
+      })
+      .optional(),
+    yearPublished: z
+      .preprocess(
+        (limit) => parseInt(limit as string, 10),
+        z.number({
+          required_error: 'year is required',
+          invalid_type_error: 'year must be a number',
+        })
+      )
+      .optional(),
   })
 );
 

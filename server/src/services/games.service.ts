@@ -26,19 +26,26 @@ const transormToBgaQuery = ({
   limit,
   offset,
   order,
+  name,
+  yearPublished,
 }: GamesPaginationQuery) => {
+  const baseQuery = {
+    limit,
+    skip: offset,
+    name,
+    year_published: yearPublished,
+  };
+
   switch (sort) {
     case gamesSortEnum.enum.name:
       return {
-        limit,
-        skip: offset,
+        ...baseQuery,
         order_by: order === orderEnum.enum.asc ? 'name' : 'name_reverse',
         ascending: 'true',
       };
     case gamesSortEnum.enum.year:
       return {
-        limit,
-        skip: offset,
+        ...baseQuery,
         order_by: 'year_published',
         ascending: order === orderEnum.enum.asc ? 'true' : 'false',
       };

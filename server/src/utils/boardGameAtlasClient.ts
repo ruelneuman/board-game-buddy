@@ -37,7 +37,7 @@ export class BoardGameArenaClient {
   }
 
   async getGamesByQueryParams(
-    params: Record<string, string | number> = {},
+    params: Record<string, string | number | undefined> = {},
     options: AxiosRequestConfig = {}
   ) {
     return this.getGames({ ...options, params });
