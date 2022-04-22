@@ -4,7 +4,7 @@ import { transformKeysSnakeToCamel } from '../utils/helpers';
 
 export const usersSortEnum = z.enum(['username', 'createdAt'] as const);
 export const reviewsSortEnum = z.enum(['rating', 'createdAt'] as const);
-export const gamesSortEnum = z.enum(['name', 'year'] as const);
+export const gamesSortEnum = z.enum(['name', 'yearPublished'] as const);
 export const orderEnum = z.enum(['asc', 'desc'] as const);
 export const searchSuggestionEnum = z.enum([
   'mechanic',

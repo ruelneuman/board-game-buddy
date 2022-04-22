@@ -57,7 +57,7 @@ const transormToBgaQuery = ({
         order_by: order === orderEnum.enum.asc ? 'name' : 'name_reverse',
         ascending: 'true',
       };
-    case gamesSortEnum.enum.year:
+    case gamesSortEnum.enum.yearPublished:
       return {
         ...baseQuery,
         order_by: 'year_published',
