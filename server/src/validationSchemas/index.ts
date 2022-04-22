@@ -156,6 +156,18 @@ export const gamesPaginationQuerySchema = basePaginationQuerySchema.merge(
         invalid_type_error: 'mechanics must be a string',
       })
       .optional(),
+    publisher: z
+      .string({
+        required_error: 'publisher is required',
+        invalid_type_error: 'publisher must be a string',
+      })
+      .optional(),
+    designer: z
+      .string({
+        required_error: 'designer is required',
+        invalid_type_error: 'designer must be a string',
+      })
+      .optional(),
   })
 );
 
