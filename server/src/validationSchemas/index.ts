@@ -119,10 +119,19 @@ export const gamesPaginationQuerySchema = basePaginationQuerySchema.merge(
       .optional(),
     yearPublished: z
       .preprocess(
-        (limit) => parseInt(limit as string, 10),
+        (yearPublished) => parseInt(yearPublished as string, 10),
         z.number({
           required_error: 'year is required',
           invalid_type_error: 'year must be a number',
+        })
+      )
+      .optional(),
+    players: z
+      .preprocess(
+        (players) => parseInt(players as string, 10),
+        z.number({
+          required_error: 'players is required',
+          invalid_type_error: 'players must be a number',
         })
       )
       .optional(),
