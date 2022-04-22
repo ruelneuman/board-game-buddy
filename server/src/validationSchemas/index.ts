@@ -135,6 +135,27 @@ export const gamesPaginationQuerySchema = basePaginationQuerySchema.merge(
         })
       )
       .optional(),
+    maxPlaytimeLte: z
+      .preprocess(
+        (maxPlaytimeLte) => parseInt(maxPlaytimeLte as string, 10),
+        z.number({
+          required_error: 'maxPlaytimeLte is required',
+          invalid_type_error: 'maxPlaytimeLte must be a number',
+        })
+      )
+      .optional(),
+    categories: z
+      .string({
+        required_error: 'categories is required',
+        invalid_type_error: 'categories must be a string',
+      })
+      .optional(),
+    mechanics: z
+      .string({
+        required_error: 'mechanics is required',
+        invalid_type_error: 'mechanics must be a string',
+      })
+      .optional(),
   })
 );
 

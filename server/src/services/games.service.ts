@@ -29,6 +29,9 @@ const transormToBgaQuery = ({
   name,
   yearPublished,
   players,
+  maxPlaytimeLte,
+  categories,
+  mechanics,
 }: GamesPaginationQuery) => {
   const baseQuery = {
     limit,
@@ -37,6 +40,10 @@ const transormToBgaQuery = ({
     year_published: yearPublished,
     lt_min_players: players === undefined ? undefined : players + 1,
     gt_max_players: players === undefined ? undefined : players - 1,
+    lt_max_playtime:
+      maxPlaytimeLte === undefined ? undefined : maxPlaytimeLte + 1,
+    categories,
+    mechanics,
   };
 
   switch (sort) {
