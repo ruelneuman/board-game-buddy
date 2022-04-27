@@ -22,7 +22,7 @@ export const ratingSchema = z
   })
   .int('rating must be an integer')
   .min(1, 'rating must be at least 1')
-  .max(5, 'rating can be at most 5');
+  .max(10, 'rating can be at most 10');
 
 export const gameIdSchema = z
   .string({
