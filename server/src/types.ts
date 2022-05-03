@@ -32,6 +32,11 @@ export interface GameDocument extends GameInput, mongoose.Document {
   updatedAt: mongoose.Schema.Types.Date;
 }
 
+export interface GameResponse extends GameDocument {
+  _id: mongoose.Types.ObjectId;
+  ratingAverage: number;
+}
+
 export interface ReviewDocument extends mongoose.Document {
   gameId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;

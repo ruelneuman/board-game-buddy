@@ -1,8 +1,8 @@
-import { Types, isValidObjectId } from 'mongoose';
+import { Types, isValidObjectId, PipelineStage } from 'mongoose';
 import createHttpError from 'http-errors';
-import Game from '../models/game.model';
+import Games from '../models/game.model';
 import bgaClient from '../utils/boardGameAtlasClient';
-import { GameDocument, GameInput } from '../types';
+import { GameDocument, GameInput, GameResponse } from '../types';
 import {
   GamesPaginationQuery,
   boardGameAtlasSearchSchema,
@@ -16,9 +16,9 @@ import {
 } from '../validationSchemas';
 import { assertNever, getPaginationData } from '../utils/helpers';
 
-const combineGameData = (gameFromDb: GameDocument, gameFromBga: BgaGame) => {
+const combineGameData = (gameFromDb: GameResponse, gameFromBga: BgaGame) => {
   const { id: boardGameAtlasId, ...gameWithoutId } = gameFromBga;
-  return { ...gameFromDb.toJSON(), ...gameWithoutId };
+  return { ...gameFromDb, ...gameWithoutId };
 };
 
 const transormToBgaQuery = ({
@@ -68,16 +68,45 @@ const transormToBgaQuery = ({
   }
 };
 
-export const createGame = async (newGame: GameInput) => Game.create(newGame);
+export const createGame = async (newGame: GameInput) => Games.create(newGame);
+
+const findGames = async (matchArgument: PipelineStage.Match['$match']) =>
+  Games.aggregate()
+    .match(matchArgument)
+    .lookup({
+      from: 'reviews',
+      localField: 'reviews',
+      foreignField: '_id',
+      as: 'expandedReviews',
+    })
+    .addFields({
+      averageRating: {
+        $avg: '$expandedReviews.rating',
+      },
+    })
+    .project({
+      expandedReviews: 0,
+    });
 
 export const findGameById = async (id: string) => {
   if (!isValidObjectId(id)) return null;
-  return Game.findById(id).exec();
+
+  const games = await findGames({ _id: new Types.ObjectId(id) });
+
+  if (games.length === 0) return null;
+
+  return games[0] as GameResponse;
 };
 
 export const findGameByBoardGameAtlasId = async (
   boardGameAtlasId: GameDocument['boardGameAtlasId']
-) => Game.findOne({ boardGameAtlasId });
+) => {
+  const games = await findGames({ boardGameAtlasId });
+
+  if (games.length === 0) return null;
+
+  return games[0] as GameResponse;
+};
 
 export const findGameWithBgaDataById = async (id: string) => {
   const game = await findGameById(id);
@@ -110,8 +139,15 @@ export const findPaginatedGamesWithBgaData = async (
       let gameFromDb = await findGameByBoardGameAtlasId(game.id);
 
       if (!gameFromDb) {
-        gameFromDb = await createGame({ boardGameAtlasId: game.id });
+        await createGame({ boardGameAtlasId: game.id });
+        gameFromDb = await findGameByBoardGameAtlasId(game.id);
       }
+
+      if (!gameFromDb)
+        throw createHttpError(
+          404,
+          `Game with boardGameAtlasId '${game.id}' not found`
+        );
 
       return combineGameData(gameFromDb, game);
     })
@@ -155,7 +191,7 @@ export const addReviewToGame = async (gameId: string, reviewId: string) => {
 };
 
 export const removeReviewFromGame = async (gameId: string, reviewId: string) =>
-  Game.findByIdAndUpdate(
+  Games.findByIdAndUpdate(
     gameId,
     {
       $pull: { reviews: reviewId },
