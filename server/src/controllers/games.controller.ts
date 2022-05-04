@@ -6,17 +6,27 @@ import {
   findCategories,
   findPaginatedGamesWithBgaData,
   findSearchSuggestions,
+  findPaginatedTopGamesWithBgaData,
 } from '../services/games.service';
 import {
   gamesPaginationQuerySchema,
   userIdSchema,
   searchSuggestionQuerySchema,
+  basePaginationQuerySchema,
 } from '../validationSchemas';
 
 const getGames = async (req: Request, res: Response) => {
   const query = gamesPaginationQuerySchema.parse(req.query);
 
   const games = await findPaginatedGamesWithBgaData(query);
+
+  res.status(200).json(games);
+};
+
+const getTopGames = async (req: Request, res: Response) => {
+  const query = basePaginationQuerySchema.parse(req.query);
+
+  const games = await findPaginatedTopGamesWithBgaData(query);
 
   res.status(200).json(games);
 };
@@ -57,4 +67,5 @@ export default {
   getMechanics,
   getCategories,
   getSearchSuggestions,
+  getTopGames,
 };

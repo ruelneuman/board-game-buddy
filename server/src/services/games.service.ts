@@ -13,6 +13,7 @@ import {
   boardGameAtlasCategoryIdToNameSchema,
   SearchSuggestionEnum,
   boardGameAtlasSearchSuggestionsSchema,
+  BasePaginationQuery,
 } from '../validationSchemas';
 import { assertNever, getPaginationData } from '../utils/helpers';
 
@@ -70,8 +71,8 @@ const transormToBgaQuery = ({
 
 export const createGame = async (newGame: GameInput) => Games.create(newGame);
 
-const findGames = async (matchArgument: PipelineStage.Match['$match']) =>
-  Games.aggregate()
+const findGames = async (matchArgument: PipelineStage.Match['$match']) => {
+  const games = await Games.aggregate()
     .match(matchArgument)
     .lookup({
       from: 'reviews',
@@ -88,6 +89,9 @@ const findGames = async (matchArgument: PipelineStage.Match['$match']) =>
       expandedReviews: 0,
     });
 
+  return games as GameResponse[];
+};
+
 export const findGameById = async (id: string) => {
   if (!isValidObjectId(id)) return null;
 
@@ -95,7 +99,7 @@ export const findGameById = async (id: string) => {
 
   if (games.length === 0) return null;
 
-  return games[0] as GameResponse;
+  return games[0];
 };
 
 export const findGameByBoardGameAtlasId = async (
@@ -105,7 +109,7 @@ export const findGameByBoardGameAtlasId = async (
 
   if (games.length === 0) return null;
 
-  return games[0] as GameResponse;
+  return games[0];
 };
 
 export const findGameWithBgaDataById = async (id: string) => {
@@ -124,6 +128,76 @@ export const findGameWithBgaDataById = async (id: string) => {
   if (parsedGamesData.count === 0 || !gameFromBga) return null;
 
   return combineGameData(game, gameFromBga);
+};
+
+export const findPaginatedTopGamesWithBgaData = async ({
+  limit,
+  offset,
+  order,
+}: BasePaginationQuery) => {
+  const options = {
+    limit,
+    offset,
+    sort: {
+      averageRating: order,
+    },
+    collation: {
+      locale: 'en',
+    },
+    customLabels: {
+      totalDocs: 'count',
+      docs: 'games',
+    },
+  };
+
+  const aggregate = Games.aggregate()
+    .lookup({
+      from: 'reviews',
+      localField: 'reviews',
+      foreignField: '_id',
+      as: 'expandedReviews',
+    })
+    .addFields({
+      averageRating: {
+        $avg: '$expandedReviews.rating',
+      },
+    })
+    .match({
+      averageRating: {
+        $ne: null,
+      },
+    })
+    .project({
+      expandedReviews: 0,
+    });
+
+  const paginatedGames = await Games.aggregatePaginate(aggregate, options);
+
+  const idsString = (paginatedGames.games as GameResponse[]).reduce(
+    (ids, game, index) =>
+      index === 0
+        ? `${ids}${game.boardGameAtlasId}`
+        : `${ids},${game.boardGameAtlasId}`,
+    ''
+  );
+
+  const response = await bgaClient.getGamesByQueryParams({ ids: idsString });
+  const parsedGamesData = boardGameAtlasSearchSchema.parse(response.data);
+
+  (paginatedGames.games as GameResponse[]).forEach((gameFromDb, index) => {
+    const gameFromBga = parsedGamesData.games.find(
+      (gameFromBoardGameAtlas) =>
+        gameFromBoardGameAtlas.id === gameFromDb.boardGameAtlasId
+    );
+
+    if (gameFromBga) {
+      const combinedGameData = combineGameData(gameFromDb, gameFromBga);
+
+      (paginatedGames.games as unknown[])[index] = combinedGameData;
+    }
+  });
+
+  return paginatedGames;
 };
 
 export const findPaginatedGamesWithBgaData = async (

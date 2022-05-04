@@ -6,6 +6,8 @@ const router = Router();
 
 router.get('/', controller.getGames);
 
+router.get('/top', controller.getTopGames);
+
 router.get('/mechanics', controller.getMechanics);
 
 router.get('/categories', controller.getCategories);

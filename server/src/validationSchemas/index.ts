@@ -67,9 +67,9 @@ export const basePaginationQuerySchema = z.object({
         })
         .int('limit must be an integer')
         .min(0, 'minimum limit is 0')
-        .max(100, 'maximum limit is 100')
+        .max(25, 'maximum limit is 25')
     )
-    .default(30),
+    .default(25),
   offset: z
     .preprocess(
       (offset) => parseInt(offset as string, 10),
@@ -84,6 +84,8 @@ export const basePaginationQuerySchema = z.object({
     .default(0),
   order: orderEnum.default(orderEnum.enum.desc),
 });
+
+export type BasePaginationQuery = z.infer<typeof basePaginationQuerySchema>;
 
 export const usersPaginationQuerySchema = basePaginationQuerySchema.merge(
   z.object({

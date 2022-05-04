@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { GameDocument } from '../types';
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
+import { GameDocument, GameResponse } from '../types';
 
 const gameSchema = new mongoose.Schema(
   {
@@ -23,4 +24,9 @@ const gameSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model<GameDocument>('Game', gameSchema);
+gameSchema.plugin(mongooseAggregatePaginate);
+
+export default mongoose.model<
+  GameDocument,
+  mongoose.AggregatePaginateModel<GameResponse>
+>('Game', gameSchema);
