@@ -29,7 +29,7 @@ export const gameIdSchema = z
     required_error: 'gameId is required',
     invalid_type_error: 'gameId must be a string',
   })
-  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid game id' });
+  .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid gameId' });
 
 export const reviewIdSchema = z
   .string({
@@ -249,12 +249,7 @@ export const newReviewWithoutUserIdSchema = newReviewSchema.omit({
 });
 
 export const gameForCollectionSchema = z.object({
-  id: z
-    .string({
-      required_error: 'id is required',
-      invalid_type_error: 'id must be a string',
-    })
-    .refine((id) => mongoose.isValidObjectId(id), { message: 'Invalid id' }),
+  gameId: gameIdSchema,
 });
 
 export const authenticationSchema = z

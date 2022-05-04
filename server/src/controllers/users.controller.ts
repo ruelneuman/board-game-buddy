@@ -145,7 +145,7 @@ const postGameToCollection = async (req: Request, res: Response) => {
   if (!req.user) throw createHttpError(401);
 
   const collectionId = collectionIdSchema.parse(req.params.collectionId);
-  const { id: gameId } = gameForCollectionSchema.parse(req.body);
+  const { gameId } = gameForCollectionSchema.parse(req.body);
   const { id: userId } = req.user;
 
   const updateResponse = await addGameToCollection(
