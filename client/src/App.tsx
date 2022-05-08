@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
       <Routes>
         <Route path="search" element={<div>Search Games</div>} />
         <Route path="users" element={<div>Users</div>} />
+        <Route path="/" element={<Navigate to="/search" replace />} />
         <Route path="*" element={<div>Not Found</div>} />
       </Routes>
     </div>
