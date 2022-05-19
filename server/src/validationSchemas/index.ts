@@ -299,7 +299,7 @@ export const boardGameAtlasGameSchema = z.preprocess(
   z.object({
     id: z.string(),
     name: z.string().nullable().default(null),
-    description_preview: z.string().default(''),
+    descriptionPreview: z.string().default(''),
     price: z.string(),
     priceCa: z.string(),
     priceUk: z.string(),
