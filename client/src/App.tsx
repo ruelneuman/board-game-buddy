@@ -3,8 +3,7 @@ import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
-      <h1>Board Game Buddy</h1>
+    <>
       <nav>
         <NavLink to="/search">Search Games</NavLink>
         <NavLink to="/users">Users</NavLink>
@@ -16,7 +15,7 @@ function App() {
         <Route path="/" element={<Navigate to="/search" replace />} />
         <Route path="*" element={<div>Not Found</div>} />
       </Routes>
-    </div>
+    </>
   );
 }
 
