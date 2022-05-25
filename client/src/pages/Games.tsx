@@ -6,6 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CardHeader from '@mui/material/CardHeader';
 import CardActionArea from '@mui/material/CardActionArea';
 import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -48,14 +49,17 @@ function GameCard() {
 
 function Games() {
   return (
-    <Grid container spacing={{ xs: 2, md: 3 }}>
-      {Array.from(Array(24)).map((_, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-          <GameCard />
-        </Grid>
-      ))}
-    </Grid>
+    <Stack alignItems="center" spacing={{ xs: 2, md: 3 }}>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
+        {Array.from(Array(23)).map((_, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <GameCard />
+          </Grid>
+        ))}
+      </Grid>
+      <Pagination count={10} color="primary" size="large" />
+    </Stack>
   );
 }
 

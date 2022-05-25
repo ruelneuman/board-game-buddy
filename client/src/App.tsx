@@ -18,6 +18,7 @@ function App() {
           <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Container>
+      <div>Footer</div>
     </>
   );
 }
