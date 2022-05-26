@@ -9,8 +9,12 @@ import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import InputAdornment from '@mui/material/InputAdornment';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import SearchIcon from '@mui/icons-material/Search';
 
 function GameCard() {
   return (
@@ -49,17 +53,34 @@ function GameCard() {
 
 function Games() {
   return (
-    <Stack alignItems="center" spacing={{ xs: 2, md: 3 }}>
-      <Grid container spacing={{ xs: 2, md: 3 }}>
-        {Array.from(Array(23)).map((_, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <GameCard />
-          </Grid>
-        ))}
+    <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Grid item xs={12}>
+        <TextField
+          id="game-search"
+          label="Search"
+          type="search"
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
       </Grid>
-      <Pagination count={10} color="primary" size="large" />
-    </Stack>
+      {Array.from(Array(23)).map((_, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <GameCard />
+        </Grid>
+      ))}
+      <Grid item xs={12}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Pagination count={10} color="primary" size="large" />
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
 
