@@ -1,6 +1,8 @@
 import React from 'react';
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Games from './pages/Games';
 
 function App() {
@@ -18,7 +20,19 @@ function App() {
           <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Container>
-      <div>Footer</div>
+      <Box
+        sx={{
+          backgroundColor: 'primary.main',
+          color: 'primary.contrastText',
+          marginTop: { xs: 2, md: 3 },
+          padding: 2,
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant="body1">
+          © {new Date().getFullYear()} Board Game Buddy
+        </Typography>
+      </Box>
     </>
   );
 }
