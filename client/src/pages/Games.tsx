@@ -11,6 +11,7 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -56,14 +57,16 @@ function Games() {
     <Grid container spacing={{ xs: 2, md: 3 }}>
       <Grid item xs={12}>
         <TextField
-          id="game-search"
-          label="Search"
-          type="search"
+          id="search-games"
+          label="Search Games"
+          type="text"
           fullWidth
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton aria-label="toggle password visibility" edge="end">
+                  <SearchIcon />
+                </IconButton>
               </InputAdornment>
             ),
           }}
