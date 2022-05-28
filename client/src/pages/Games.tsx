@@ -24,7 +24,8 @@ type GameCardProps = {
 };
 
 function GameCard({ game }: GameCardProps) {
-  const { averageRating, name, yearPublished, images } = game;
+  const { averageRating, name, yearPublished, players, playtime, images } =
+    game;
 
   return (
     <Card sx={{ height: '100%' }}>
@@ -68,11 +69,11 @@ function GameCard({ game }: GameCardProps) {
         <CardContent>
           <Stack direction="row" alignItems="center" gap={1}>
             <GroupsIcon />
-            <Typography variant="body1">2-4</Typography>
+            <Typography variant="body1">{players || '-'}</Typography>
           </Stack>
           <Stack direction="row" alignItems="center" gap={1}>
             <AccessTimeIcon />
-            <Typography variant="body1">30-180</Typography>
+            <Typography variant="body1">{playtime || '-'}</Typography>
           </Stack>
         </CardContent>
       </CardActionArea>
