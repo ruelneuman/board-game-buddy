@@ -37,26 +37,35 @@ function GameCard({ game }: GameCardProps) {
           alignItems: 'start',
         }}
       >
-        <CardHeader
-          avatar={
+        <CardContent sx={{ width: '100%' }}>
+          <Stack direction="row" spacing={2} justifyContent="space-between">
+            <Box>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: '2',
+                  WebkitBoxOrient: 'vertical',
+                }}
+              >
+                {name || 'Untitled'}
+              </Typography>
+              <Typography
+                variant="body2"
+                component="div"
+                color="text.secondary"
+              >
+                {yearPublished || '-'}
+              </Typography>
+            </Box>
             <Avatar sx={{ bgcolor: 'primary.main' }} aria-label="rating">
               {averageRating !== null ? averageRating.toFixed(1) : '-'}
             </Avatar>
-          }
-          title={name || 'Untitled'}
-          subheader={yearPublished || '-'}
-          titleTypographyProps={{
-            variant: 'h6',
-            component: 'div',
-            sx: {
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: '2',
-              WebkitBoxOrient: 'vertical',
-            },
-          }}
-        />
+          </Stack>
+        </CardContent>
         <CardMedia
           component="img"
           image={
