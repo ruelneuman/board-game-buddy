@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import CardHeader from '@mui/material/CardHeader';
 import CardActionArea from '@mui/material/CardActionArea';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
@@ -91,33 +90,63 @@ function GameCard({ game }: GameCardProps) {
 }
 
 function Games() {
+  const PAGE_LIMIT = 40;
+
+  const [page, setPage] = useState<number>(1);
+
   const {
     data: paginatedGames,
-    isLoading,
+    isFetching,
     isSuccess,
     isError,
     error,
-  } = useGetGamesQuery();
+  } = useGetGamesQuery(page);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    pageNumber: number
+  ): void => {
+    setPage(pageNumber);
+    window.scrollTo(0, 0);
+  };
 
   let content;
 
-  if (isLoading) content = <div>LOADING...</div>;
-  if (isSuccess) {
-    content = paginatedGames.games.map((game) => (
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        md={4}
-        lg={3}
-        // eslint-disable-next-line no-underscore-dangle
-        key={game._id}
-      >
-        <GameCard game={game} />
-      </Grid>
-    ));
-  }
-  if (isError && 'data' in error) {
+  if (isFetching) content = <div>LOADING...</div>;
+  else if (isSuccess) {
+    content = (
+      <>
+        {paginatedGames.games.map((game) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            // eslint-disable-next-line no-underscore-dangle
+            key={game._id}
+          >
+            <GameCard game={game} />
+          </Grid>
+        ))}
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Pagination
+              onChange={handlePageChange}
+              page={page}
+              count={
+                paginatedGames.totalPages < PAGE_LIMIT
+                  ? paginatedGames.totalPages
+                  : PAGE_LIMIT
+              }
+              color="primary"
+              size="large"
+            />
+          </Box>
+        </Grid>
+      </>
+    );
+  } else if (isError && 'data' in error) {
     content = (
       <div>
         {error.status} {JSON.stringify(error.data)}
@@ -145,11 +174,6 @@ function Games() {
         />
       </Grid>
       {content}
-      <Grid item xs={12}>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Pagination count={10} color="primary" size="large" />
-        </Box>
-      </Grid>
     </Grid>
   );
 }
