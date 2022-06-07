@@ -62,25 +62,19 @@ function Games() {
   } else if (paginatedGames) {
     content = (
       <>
-        {paginatedGames.games.length !== 0 ? (
-          paginatedGames.games.map((game) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              // eslint-disable-next-line no-underscore-dangle
-              key={game._id}
-            >
-              <GameCard game={game} />
-            </Grid>
-          ))
-        ) : (
-          <Grid item xs={12}>
-            <Typography variant="body1">No results found</Typography>
+        {paginatedGames.games.map((game) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            // eslint-disable-next-line no-underscore-dangle
+            key={game._id}
+          >
+            <GameCard game={game} />
           </Grid>
-        )}
+        ))}
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Pagination
