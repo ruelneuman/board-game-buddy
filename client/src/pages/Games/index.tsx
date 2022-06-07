@@ -75,21 +75,6 @@ function Games() {
             <GameCard game={game} />
           </Grid>
         ))}
-        <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Pagination
-              onChange={handlePageChange}
-              page={page}
-              count={
-                paginatedGames.totalPages < PAGE_LIMIT
-                  ? paginatedGames.totalPages
-                  : PAGE_LIMIT
-              }
-              color="primary"
-              size="large"
-            />
-          </Box>
-        </Grid>
       </>
     );
   }
@@ -114,6 +99,21 @@ function Games() {
         />
       </Grid>
       {content}
+      <Grid item xs={12}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Pagination
+            onChange={handlePageChange}
+            page={page}
+            count={
+              paginatedGames
+                ? Math.min(paginatedGames.totalPages, PAGE_LIMIT)
+                : 0
+            }
+            color="primary"
+            size="large"
+          />
+        </Box>
+      </Grid>
     </Grid>
   );
 }
