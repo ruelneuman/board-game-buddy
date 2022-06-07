@@ -3,25 +3,27 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
-import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Pagination from '@mui/material/Pagination';
 import SearchIcon from '@mui/icons-material/Search';
-import { useGetGamesQuery } from '../../services/api';
 
+import { useGetGamesQuery } from '../../services/api';
+import { useDebounce } from '../../app/hooks';
 import GameCard from './GameCard';
 
 function Games() {
   const PAGE_LIMIT = 40;
 
   const [page, setPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const debouncedSearchTerm = useDebounce(searchTerm);
 
   const {
     currentData: paginatedGames,
     isFetching,
     isError,
-  } = useGetGamesQuery(page);
+  } = useGetGamesQuery({ page, limit: 24, name: debouncedSearchTerm });
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -82,21 +84,25 @@ function Games() {
   return (
     <Grid container spacing={{ xs: 2, md: 3 }}>
       <Grid item xs={12}>
-        <TextField
-          id="search-games"
-          label="Search Games"
-          type="text"
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton aria-label="toggle password visibility" edge="end">
+        <form>
+          <TextField
+            id="search-games"
+            label="Search Games"
+            type="text"
+            fullWidth
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchTerm(event.target.value);
+              setPage(1);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
                   <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </form>
       </Grid>
       {content}
       <Grid item xs={12}>
