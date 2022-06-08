@@ -51,7 +51,7 @@ function GameCard({ game }: GameCardProps) {
                 component="div"
                 color="text.secondary"
               >
-                {yearPublished || '-'}
+                {yearPublished ? `(${yearPublished})` : ''}
               </Typography>
             </Box>
             <Avatar sx={{ bgcolor: 'primary.main' }} aria-label="rating">
