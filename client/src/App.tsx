@@ -13,15 +13,17 @@ function App() {
         <NavLink to="/games">Games</NavLink>
         <NavLink to="/users">Users</NavLink>
       </nav>
-      <Container>
-        <Routes>
-          <Route path="games" element={<Games />} />
-          <Route path="games/:gameId" element={<Game />} />
-          <Route path="users" element={<div>Users...</div>} />
-          <Route path="/" element={<Navigate to="/games" replace />} />
-          <Route path="*" element={<div>Not Found</div>} />
-        </Routes>
-      </Container>
+      <main>
+        <Container>
+          <Routes>
+            <Route path="games" element={<Games />} />
+            <Route path="games/:gameId" element={<Game />} />
+            <Route path="users" element={<div>Users...</div>} />
+            <Route path="/" element={<Navigate to="/games" replace />} />
+            <Route path="*" element={<div>Not Found</div>} />
+          </Routes>
+        </Container>
+      </main>
       <Box
         sx={{
           backgroundColor: 'primary.main',
