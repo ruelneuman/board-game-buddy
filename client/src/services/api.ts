@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { PaginatedGames } from '../types';
+import { PaginatedGames, Game } from '../types';
 
 interface GetGamesOptions {
   page: number;
@@ -15,7 +15,10 @@ export const apiSlice = createApi({
       query: ({ page, limit, name }) =>
         `/games?limit=${limit}&offset=${(page - 1) * limit}&name=${name}`,
     }),
+    getGame: builder.query<Game, string>({
+      query: (gameId) => `/games/${gameId}`,
+    }),
   }),
 });
 
-export const { useGetGamesQuery } = apiSlice;
+export const { useGetGamesQuery, useGetGameQuery } = apiSlice;
