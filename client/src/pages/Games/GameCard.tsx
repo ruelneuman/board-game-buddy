@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -17,12 +18,24 @@ type GameCardProps = {
 };
 
 function GameCard({ game }: GameCardProps) {
-  const { averageRating, name, yearPublished, players, playtime, images } =
-    game;
+  const {
+    averageRating,
+    name,
+    yearPublished,
+    players,
+    playtime,
+    images,
+    _id: gameId,
+  } = game;
+
+  const navigate = useNavigate();
 
   return (
     <Card sx={{ height: '100%' }}>
       <CardActionArea
+        onClick={() => {
+          navigate(`/games/${gameId}`);
+        }}
         sx={{
           height: '100%',
           display: 'flex',
