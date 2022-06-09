@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 function Game() {
@@ -22,9 +23,9 @@ function Game() {
     updatedAt: '2022-04-27T10:36:28.420Z',
     __v: 4,
     averageRating: 8.75,
-    name: 'Inis',
+    name: 'Inis: The Board Game',
     descriptionPreview:
-      " \r\n In Inis, you play the role of a Celtic chieftain who has just arrived in a new land. You must construct sanctuaries for spiritual enlightenment, erect citadels to protect peaceful clans, and indulge your wanderlust by exploring the surrounding territories. As clans migrate throughout the land and come to coexist, their differences can lead to clashes, which are often resolved peacefully—but not always. \r\n Demonstrate your leadership by rallying clans loyal to your cause, and then the Great Council will have no choice but bestow the crown on you. \r\n The game's mechanics combine card drafting and area control to produce a system rich in strategic options and interpersonal interactions. The tiles give every game a unique, gradually unfolding geography. The art brings Ireland's ancient epics and audacious heroes to life. \r\n There are three different types of cards in  Inis : \r\n \r\n Action Cards - These are drafted each round and provide the base actions to deploy troops, move troops, attack, and play new regions. \r\n Advantage Cards - These are acquired as a result of controlling certain regions. Each region has its own Advantage Card you receive as a result of having the most troops in it. \r\n Epic Tales Cards - These unique and powerful cards evoke the Celtic gods and heroes to inspire the clans to accomplish legendary feats. \r\n \r\n ",
+      "In Inis, you play the role of a Celtic chieftain who has just arrived in a new land. You must construct sanctuaries for spiritual enlightenment, erect citadels to protect peaceful clans, and indulge your wanderlust by exploring the surrounding territories. As clans migrate throughout the land and come to coexist, their differences can lead to clashes, which are often resolved peacefully—but not always. \r\n Demonstrate your leadership by rallying clans loyal to your cause, and then the Great Council will have no choice but bestow the crown on you. \r\n The game's mechanics combine card drafting and area control to produce a system rich in strategic options and interpersonal interactions. The tiles give every game a unique, gradually unfolding geography. The art brings Ireland's ancient epics and audacious heroes to life. \r\n There are three different types of cards in  Inis : \r\n \r\n Action Cards - These are drafted each round and provide the base actions to deploy troops, move troops, attack, and play new regions. \r\n Advantage Cards - These are acquired as a result of controlling certain regions. Each region has its own Advantage Card you receive as a result of having the most troops in it. \r\n Epic Tales Cards - These unique and powerful cards evoke the Celtic gods and heroes to inspire the clans to accomplish legendary feats.",
     price: '55.99',
     priceCa: '70.99',
     priceUk: '43.73',
@@ -108,11 +109,12 @@ function Game() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
+          p: 2,
         }}
       >
-        <Stack direction="row">
-          <Box>
-            <Stack direction="row" alignItems="center">
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar sx={{ bgcolor: 'primary.main' }} aria-label="rating">
                 {game.averageRating !== null
                   ? game.averageRating.toFixed(1)
@@ -120,6 +122,18 @@ function Game() {
               </Avatar>
               <Typography variant="h3">{game.name}</Typography>
             </Stack>
+          </Grid>
+          <Grid item xs={12} sm="auto" sx={{ textAlign: 'center' }}>
+            <img
+              src={
+                game.images.medium ||
+                'https://s3-us-west-1.amazonaws.com/5cc.images/350x350/games/empty%20box.jpg'
+              }
+              alt={game.name || 'Untitled'}
+              style={{ maxWidth: '250px' }}
+            />
+          </Grid>
+          <Grid item>
             <Typography variant="body1">
               <Typography
                 variant="body1"
@@ -194,21 +208,13 @@ function Game() {
               </Typography>
               {game.artists.length !== 0 ? game.artists.join(', ') : '-'}
             </Typography>
-          </Box>
-          <img
-            src={
-              game.images.medium ||
-              'https://s3-us-west-1.amazonaws.com/5cc.images/350x350/games/empty%20box.jpg'
-            }
-            alt={game.name || 'Untitled'}
-            style={{ maxWidth: '250px' }}
-          />
-        </Stack>
-        <Box>
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
-            {game.descriptionPreview}
-          </Typography>
-        </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+              {game.descriptionPreview}
+            </Typography>
+          </Grid>
+        </Grid>
       </Paper>
       <Box>Reviews to go here</Box>
     </Stack>
