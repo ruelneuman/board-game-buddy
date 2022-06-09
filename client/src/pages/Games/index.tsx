@@ -84,7 +84,11 @@ function Games() {
   return (
     <Grid container spacing={{ xs: 2, md: 3 }}>
       <Grid item xs={12}>
-        <form>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
           <TextField
             id="search-games"
             label="Search Games"
