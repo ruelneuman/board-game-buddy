@@ -2,8 +2,10 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import GameInfo from './GameInfo';
+import NotFound from '../NotFound';
 import { useGetGameQuery } from '../../services/api';
 
 function Game() {
@@ -13,9 +15,9 @@ function Game() {
 
   if (isError) {
     if ('data' in error && error.status === 404) {
-      return <Box>Not found</Box>;
+      return <NotFound />;
     }
-    return <Box>ERROR...</Box>;
+    return <Typography variant="body1">Unable to load game</Typography>;
   }
 
   return (

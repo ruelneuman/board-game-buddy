@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Games from './pages/Games';
 import Game from './pages/Game';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
             <Route path="games/:gameId" element={<Game />} />
             <Route path="users" element={<div>Users...</div>} />
             <Route path="/" element={<Navigate to="/games" replace />} />
-            <Route path="*" element={<div>Not Found</div>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>
       </main>
