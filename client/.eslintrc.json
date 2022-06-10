@@ -19,6 +19,7 @@
   },
   "plugins": ["prettier", "@typescript-eslint", "react", "jest"],
   "rules": {
-    "prettier/prettier": ["error"]
+    "prettier/prettier": ["error"],
+    "react/require-default-props": ["off"]
   }
 }

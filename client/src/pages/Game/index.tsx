@@ -9,21 +9,14 @@ import { useGetGameQuery } from '../../services/api';
 function Game() {
   const { gameId } = useParams();
 
-  const {
-    data: game,
-    isLoading,
-    isError,
-    error,
-  } = useGetGameQuery(gameId || '');
+  const { data: game, isError, error } = useGetGameQuery(gameId || '');
 
-  if (isLoading) return <Box>LOADING...</Box>;
   if (isError) {
     if ('data' in error && error.status === 404) {
       return <Box>Not found</Box>;
     }
     return <Box>ERROR...</Box>;
   }
-  if (!game) return <Box>No game found</Box>;
 
   return (
     <Stack spacing={{ xs: 2, md: 3 }}>
