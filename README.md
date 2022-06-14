@@ -1,6 +1,6 @@
 # Board Game Buddy
 
-A full stack web application for discovering, reviewing, and collecting board games. 
+A full stack web application for discovering, reviewing, and collecting board games (in development).
 
 Users can browse through over 140,000 board games. Games can be sorted and filtered as desired. Users can leave reviews and like their favourite ones as well. Games can also be added to collections such as 'Wishlist' or 'Want To Play'.
 
