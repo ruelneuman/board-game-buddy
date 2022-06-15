@@ -11,6 +11,20 @@ export interface Pagination {
   nextPage: number | null;
 }
 
+export enum CollectionCategory {
+  Wishlist = 'wishlist',
+  Own = 'own',
+  PreviouslyOwned = 'previouslyOwned',
+  WantToPlay = 'wantToPlay',
+  WantToBuy = 'wantToBuy',
+}
+
+export interface Collection {
+  _id: string;
+  collectionName: CollectionCategory;
+  games: string[];
+}
+
 export interface GameMechanic {
   id: string;
 }
@@ -69,4 +83,34 @@ export interface Game {
 
 export interface PaginatedGames extends Pagination {
   games: Game[];
+}
+
+export interface Review {
+  _id: string;
+  gameId: string;
+  userId: string;
+  rating: number | null;
+  reviewText: string;
+  likes: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaginatedReviews extends Pagination {
+  reviews: Review[];
+}
+
+export interface User {
+  _id: string;
+  username: string;
+  email: string;
+  bio: string;
+  reviews: string[];
+  collections: Collection[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaginatedUsers extends Pagination {
+  users: User[];
 }
