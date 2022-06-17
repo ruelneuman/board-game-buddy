@@ -86,5 +86,5 @@ export const errorResponder: ErrorRequestHandler = (err, _req, res, next) => {
     };
   }
 
-  res.status(errorResponse.status).json(errorResponse);
+  return res.status(errorResponse.status).json(errorResponse);
 };

@@ -39,7 +39,11 @@ const postReview = async (req: Request, res: Response) => {
 
   const newReview = newReviewWithoutUserIdSchema.parse(req.body);
 
-  const review = await createReview({ ...newReview, userId: req.user.id });
+  const review = await createReview({
+    ...newReview,
+    game: newReview.gameId,
+    user: req.user.id,
+  });
 
   res.status(200).json(review);
 };
@@ -55,18 +59,20 @@ const putReview = async (req: Request, res: Response) => {
   if (!reviewToUpdate)
     throw createHttpError(404, `Review with id ${reviewId} not found`);
 
-  if (req.user.id !== reviewToUpdate.userId.toString())
+  // eslint-disable-next-line no-underscore-dangle
+  if (req.user.id !== reviewToUpdate.user._id.toString())
     throw createHttpError(
       401,
-      'User id does not match userId on existing review'
+      'User id does not match user id on existing review'
     );
 
-  if (newReview.gameId !== reviewToUpdate.gameId.toString())
-    throw createHttpError(400, `New gameId must match existing gameId`);
+  if (newReview.gameId !== reviewToUpdate.game.toString())
+    throw createHttpError(400, `New game id must match existing game id`);
 
   const updatedReview = await updateReview(reviewId, {
     ...newReview,
-    userId: req.user.id,
+    game: newReview.gameId,
+    user: req.user.id,
   });
 
   res.status(200).json(updatedReview);
@@ -82,7 +88,8 @@ const deleteReview = async (req: Request, res: Response) => {
   if (!review)
     throw createHttpError(404, `Review with id '${reviewId}' not found`);
 
-  if (req.user.id !== review.userId.toString())
+  // eslint-disable-next-line no-underscore-dangle
+  if (req.user.id !== review.user._id.toString())
     throw createHttpError(401, 'User id does not match user id on review');
 
   await deleteReviewById(reviewId);

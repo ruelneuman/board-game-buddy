@@ -20,8 +20,8 @@ export interface GameInput {
 }
 
 export interface ReviewInput {
-  gameId: string;
-  userId: string;
+  game: string;
+  user: string;
   rating: number;
   reviewText?: string;
 }
@@ -38,8 +38,8 @@ export interface GameResponse extends GameDocument {
 }
 
 export interface ReviewDocument extends mongoose.Document {
-  gameId: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId;
+  game: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   rating: number;
   reviewText: string;
   likes: mongoose.Types.ObjectId[];

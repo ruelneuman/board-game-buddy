@@ -1,6 +1,6 @@
 import { Types, isValidObjectId, PipelineStage } from 'mongoose';
 import createHttpError from 'http-errors';
-import Games from '../models/game.model';
+import Game from '../models/game.model';
 import bgaClient from '../utils/boardGameAtlasClient';
 import { GameDocument, GameInput, GameResponse } from '../types';
 import {
@@ -69,10 +69,10 @@ const transormToBgaQuery = ({
   }
 };
 
-export const createGame = async (newGame: GameInput) => Games.create(newGame);
+export const createGame = async (newGame: GameInput) => Game.create(newGame);
 
 const findGames = async (matchArgument: PipelineStage.Match['$match']) => {
-  const games = await Games.aggregate()
+  const games = await Game.aggregate()
     .match(matchArgument)
     .lookup({
       from: 'reviews',
@@ -94,6 +94,11 @@ const findGames = async (matchArgument: PipelineStage.Match['$match']) => {
 
 export const findGameById = async (id: string) => {
   if (!isValidObjectId(id)) return null;
+  return Game.findById(id).exec();
+};
+
+export const findAggregateGameById = async (id: string) => {
+  if (!isValidObjectId(id)) return null;
 
   const games = await findGames({ _id: new Types.ObjectId(id) });
 
@@ -113,7 +118,7 @@ export const findGameByBoardGameAtlasId = async (
 };
 
 export const findGameWithBgaDataById = async (id: string) => {
-  const game = await findGameById(id);
+  const game = await findAggregateGameById(id);
 
   if (!game) return null;
 
@@ -150,7 +155,7 @@ export const findPaginatedTopGamesWithBgaData = async ({
     },
   };
 
-  const aggregate = Games.aggregate()
+  const aggregate = Game.aggregate()
     .lookup({
       from: 'reviews',
       localField: 'reviews',
@@ -171,7 +176,7 @@ export const findPaginatedTopGamesWithBgaData = async ({
       expandedReviews: 0,
     });
 
-  const paginatedGames = await Games.aggregatePaginate(aggregate, options);
+  const paginatedGames = await Game.aggregatePaginate(aggregate, options);
 
   const idsString = (paginatedGames.games as GameResponse[]).reduce(
     (ids, game, index) =>
@@ -265,7 +270,7 @@ export const addReviewToGame = async (gameId: string, reviewId: string) => {
 };
 
 export const removeReviewFromGame = async (gameId: string, reviewId: string) =>
-  Games.findByIdAndUpdate(
+  Game.findByIdAndUpdate(
     gameId,
     {
       $pull: { reviews: reviewId },

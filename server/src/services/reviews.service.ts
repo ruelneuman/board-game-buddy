@@ -28,6 +28,7 @@ export const findPaginatedReviews = async ({
       totalDocs: 'count',
       docs: 'reviews',
     },
+    populate: 'user',
   };
 
   const query: Record<string, string | number> = {};
@@ -41,32 +42,32 @@ export const findPaginatedReviews = async ({
 
 export const findReviewById = async (id: string) => {
   if (!isValidObjectId(id)) return null;
-  return Review.findById(id).exec();
+  return Review.findById(id).populate('user').exec();
 };
 
 export const createReview = async (newReview: ReviewInput) => {
-  const { userId, gameId } = newReview;
+  const { user, game } = newReview;
 
   const matchingReview = await Review.findOne({
-    gameId,
-    userId,
+    game,
+    user,
   }).exec();
 
   if (matchingReview)
     throw createHttpError(
       409,
-      `Review already exists with userId ${userId} and gameId ${gameId}`
+      `Review already exists with userId ${user} and gameId ${game}`
     );
 
   const review = await Review.create(newReview);
 
   await addReviewToUser(
-    userId,
+    user,
     // eslint-disable-next-line no-underscore-dangle
     (review._id as Types.ObjectId).toString()
   );
   await addReviewToGame(
-    gameId,
+    game,
     // eslint-disable-next-line no-underscore-dangle
     (review._id as Types.ObjectId).toString()
   );
@@ -99,9 +100,9 @@ export const deleteReviewById = async (reviewId: string) => {
 
   if (!review) return null;
 
-  await removeReviewFromGame(review.gameId.toString(), reviewId);
+  await removeReviewFromGame(review.game.toString(), reviewId);
 
-  await removeReviewFromUser(review.userId.toString(), reviewId);
+  await removeReviewFromUser(review.user.toString(), reviewId);
 
   return review;
 };

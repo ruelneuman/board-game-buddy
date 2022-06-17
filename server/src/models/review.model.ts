@@ -4,12 +4,12 @@ import { ReviewDocument } from '../types';
 
 const reviewSchema = new mongoose.Schema(
   {
-    gameId: {
+    game: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Game',
     },
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
