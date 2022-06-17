@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 
-export enum CollectionCategory {
-  Wishlist = 'wishlist',
-  Own = 'own',
-  PreviouslyOwned = 'previouslyOwned',
-  WantToPlay = 'wantToPlay',
-  WantToBuy = 'wantToBuy',
-}
+export const collectionCategories = [
+  'wishlist',
+  'own',
+  'previouslyOwned',
+  'wantToPlay',
+  'wantToBuy',
+] as const;
+
+export type CollectionCategory = typeof collectionCategories[number];
 
 export interface UserInput {
   username: string;
@@ -48,7 +50,7 @@ export interface ReviewDocument extends mongoose.Document {
 }
 
 export interface CollectionDocument extends mongoose.Document {
-  collectionName: keyof typeof CollectionCategory;
+  collectionName: CollectionCategory;
   games: mongoose.Types.ObjectId[];
 }
 
