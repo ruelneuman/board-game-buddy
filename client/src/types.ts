@@ -87,8 +87,8 @@ export interface PaginatedGames extends Pagination {
 
 export interface Review {
   _id: string;
-  gameId: string;
-  userId: string;
+  game: string;
+  user: User | null;
   rating: number | null;
   reviewText: string;
   likes: string[];
