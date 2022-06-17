@@ -48,7 +48,7 @@ export interface ReviewDocument extends mongoose.Document {
 }
 
 export interface CollectionDocument extends mongoose.Document {
-  collectionName: CollectionCategory;
+  collectionName: keyof typeof CollectionCategory;
   games: mongoose.Types.ObjectId[];
 }
 
