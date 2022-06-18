@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
-import { store } from './app/store';
+import { store } from './store';
 import App from './App';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

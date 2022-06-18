@@ -9,7 +9,7 @@ import Pagination from '@mui/material/Pagination';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useGetGamesQuery } from '../../services/api';
-import { useDebounce } from '../../app/hooks';
+import { useDebounce } from '../../hooks';
 import GameCard from './GameCard';
 
 function Games() {
