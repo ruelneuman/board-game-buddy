@@ -11,13 +11,12 @@ export interface Pagination {
   nextPage: number | null;
 }
 
-export enum CollectionCategory {
-  Wishlist = 'wishlist',
-  Own = 'own',
-  PreviouslyOwned = 'previouslyOwned',
-  WantToPlay = 'wantToPlay',
-  WantToBuy = 'wantToBuy',
-}
+export type CollectionCategory =
+  | 'wishlist'
+  | 'own'
+  | 'previouslyOwned'
+  | 'wantToPlay'
+  | 'wantToBuy';
 
 export interface Collection {
   _id: string;
