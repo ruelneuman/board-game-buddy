@@ -15,7 +15,7 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Review } from '../../types';
+import type { Review } from '../../types';
 
 dayjs.extend(relativeTime);
 

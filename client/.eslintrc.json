@@ -20,6 +20,10 @@
   "plugins": ["prettier", "@typescript-eslint", "react", "jest"],
   "rules": {
     "prettier/prettier": ["error"],
-    "react/require-default-props": ["off"]
+    "react/require-default-props": ["off"],
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+    ]
   }
 }

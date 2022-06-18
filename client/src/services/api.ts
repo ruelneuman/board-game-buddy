@@ -1,15 +1,53 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { PaginatedGames, Game } from '../types';
+import type { RootState } from '../store';
+import type { PaginatedGames, Game } from '../types';
 
-interface GetGamesOptions {
+export interface GetGamesOptions {
   page: number;
   limit: number;
   name: string;
 }
 
+export interface AuthUser {
+  id: string;
+  username: string;
+  email: string;
+}
+
+export interface LoginResponse {
+  user: AuthUser;
+  token: string;
+}
+
+export interface BaseLoginRequest {
+  password: string;
+}
+
+export interface UsernameLoginRequest extends BaseLoginRequest {
+  username: string;
+}
+
+export interface EmailLoginRequest extends BaseLoginRequest {
+  email: string;
+}
+
+export type LoginRequest =
+  | UsernameLoginRequest
+  | EmailLoginRequest
+  | (EmailLoginRequest & UsernameLoginRequest);
+
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api',
+    prepareHeaders: (headers, { getState }) => {
+      const { token } = (getState() as RootState).auth;
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     getGames: builder.query<PaginatedGames, GetGamesOptions>({
       query: ({ page, limit, name }) =>
@@ -18,7 +56,14 @@ export const apiSlice = createApi({
     getGame: builder.query<Game, string>({
       query: (gameId) => `/games/${gameId}`,
     }),
+    login: builder.mutation<LoginResponse, LoginRequest>({
+      query: (credentials) => ({
+        url: '/auth/login',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const { useGetGamesQuery, useGetGameQuery } = apiSlice;
+export const { useGetGamesQuery, useGetGameQuery, useLoginMutation } = apiSlice;

@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 
-import { Game } from '../../types';
+import type { Game } from '../../types';
 
 type GameDetailProps = {
   title: string;
