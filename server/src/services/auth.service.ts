@@ -41,5 +41,5 @@ export const logIn = async ({
     issuer: JWT_ISSUER,
   });
 
-  return { token, ...userForToken };
+  return { token, user: userForToken };
 };
