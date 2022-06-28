@@ -1,6 +1,26 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  createListenerMiddleware,
+  isAnyOf,
+} from '@reduxjs/toolkit';
 import { apiSlice } from './services/api';
-import authReducer from './reducers/authSlice';
+import authReducer, {
+  setCredentials,
+  removeCredentials,
+  selectAuthState,
+} from './reducers/authSlice';
+
+const authLocalStorageMiddleware = createListenerMiddleware();
+
+authLocalStorageMiddleware.startListening({
+  matcher: isAnyOf(setCredentials, removeCredentials),
+  effect: (action, listenerApi) => {
+    const authState = selectAuthState(listenerApi.getState() as RootState);
+    localStorage.setItem('BoardGameBuddyAuth', JSON.stringify(authState));
+  },
+});
 
 export const store = configureStore({
   reducer: {
@@ -8,7 +28,10 @@ export const store = configureStore({
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware().concat(
+      apiSlice.middleware,
+      authLocalStorageMiddleware.middleware
+    ),
 });
 
 export type AppDispatch = typeof store.dispatch;
