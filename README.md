@@ -23,6 +23,3 @@ I chose to use Zod for validation since it is one of the few validation librarie
 Working with the external Board Game Atlas (BGA) API was convenient for easily getting board game data since the data set is large and not convenient to recreate. However it provided some challenges as well:
 
 I chose to only store the Board Game Atlas ID (as a reference) in my database and not the data in full. This BGA ID is stored along with my custom review and collection data. When my API is queried it then requests the most up to data from BGA. Since the data frequently changes I thought that this would be the best method to provide up to date information. However, this means that I am required to use the BGA API in order to sort and filter the games by any properties not stored in my own database. Therefore any sorting and filtering by additional data cannot be combined with sorting and filtering from the BGA API. One solution is to store the BGA data (in full) in my database and update it on a regular schedule to keep on mostly in sync with the most recent data.
-
-
-
